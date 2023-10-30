@@ -1,19 +1,16 @@
 import datetime
 import os
-import random
 import subprocess
-import tempfile
 
 import cv2
-from PySide6 import QtWidgets, QtCore, QtMultimedia
+from PySide6 import QtWidgets, QtCore
 from PySide6.QtCore import QUrl, QDir
-from PySide6.QtGui import QColor, QImage, QPixmap, Qt, QIcon
+from PySide6.QtGui import QColor, QImage, QPixmap, Qt
 from PySide6.QtMultimedia import QMediaPlayer
 from PySide6.QtWidgets import QApplication, QListWidgetItem, QFileDialog
 
 from widgets.Controls import ControlsWidget, Item
 from widgets.VideoScreen import VideoWidget
-
 
 VIDEO_FILTER = [
             '*.mp4',
