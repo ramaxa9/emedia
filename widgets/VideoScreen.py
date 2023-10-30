@@ -1,4 +1,7 @@
+import os
+
 from PySide6 import QtCore, QtWidgets
+from PySide6.QtGui import QIcon
 from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PySide6.QtMultimediaWidgets import QVideoWidget
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QStackedWidget
@@ -8,6 +11,7 @@ class VideoWidget(QtWidgets.QWidget):
     def __init__(self, mediafile: str = None):
         super(VideoWidget, self).__init__()
         self.setWindowTitle("EMedia Player")
+        self.setWindowIcon(QIcon(os.path.join(os.getcwd(), 'images', 'logo.png')))
         # self.setMinimumSize(600, 400)
         # self.move(200, 200)
         self.setWindowFlags(QtCore.Qt.WindowType.FramelessWindowHint)

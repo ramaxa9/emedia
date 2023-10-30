@@ -2,6 +2,7 @@ import os.path
 
 from PySide6 import QtCore, QtWidgets
 from PySide6.QtCore import QSize
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QSpacerItem, QSizePolicy, QHBoxLayout, QLabel, QPushButton, QSlider, QVBoxLayout, \
     QComboBox, QCheckBox, QListWidget, QAbstractItemView, QListWidgetItem, QListView
 
@@ -24,6 +25,7 @@ class ControlsWidget(QtWidgets.QWidget):
     def __init__(self):
         super(ControlsWidget, self).__init__()
         self.setWindowTitle("EMedia Controls")
+        self.setWindowIcon(QIcon(os.path.join(os.getcwd(), 'images', 'logo.png')))
         self.move(1, 1)
         self.setMinimumWidth(900)
 

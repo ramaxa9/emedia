@@ -1,0 +1,6 @@
+# Project exclude paths
+/.fleet/
+/.idea/
+ffprobe.exe
+/venv/
+/output/
