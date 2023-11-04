@@ -1,8 +1,8 @@
 import os
 import sys
 
-from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QApplication
+from PySide2.QtGui import QIcon
+from PySide2.QtWidgets import QApplication
 
 from widgets.AppWindow import EMediaPlayer
 

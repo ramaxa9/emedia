@@ -3,11 +3,11 @@ import os
 import subprocess
 
 import cv2
-from PySide6 import QtWidgets, QtCore
-from PySide6.QtCore import QUrl, QDir
-from PySide6.QtGui import QColor, QImage, QPixmap, Qt
-from PySide6.QtMultimedia import QMediaPlayer
-from PySide6.QtWidgets import QApplication, QListWidgetItem, QFileDialog
+from PySide2 import QtWidgets, QtCore
+from PySide2.QtCore import QUrl, QDir
+from PySide2.QtGui import QColor, QImage, QPixmap, Qt
+from PySide2.QtMultimedia import QMediaPlayer
+from PySide2.QtWidgets import QApplication, QListWidgetItem, QFileDialog
 
 from widgets.Controls import ControlsWidget, Item
 from widgets.VideoScreen import VideoWidget

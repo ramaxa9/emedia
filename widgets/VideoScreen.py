@@ -1,10 +1,10 @@
 import os
 
-from PySide6 import QtCore, QtWidgets
-from PySide6.QtGui import QIcon
-from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
-from PySide6.QtMultimediaWidgets import QVideoWidget
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QStackedWidget
+from PySide2 import QtCore, QtWidgets
+from PySide2.QtGui import QIcon
+from PySide2.QtMultimedia import QMediaPlayer, QAudioOutput
+from PySide2.QtMultimediaWidgets import QVideoWidget
+from PySide2.QtWidgets import QHBoxLayout, QLabel, QStackedWidget
 
 
 class VideoWidget(QtWidgets.QWidget):

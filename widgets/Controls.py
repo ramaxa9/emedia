@@ -1,10 +1,10 @@
 import os.path
 
 import qtawesome as qta
-from PySide6 import QtCore, QtWidgets
-from PySide6.QtCore import QSize
-from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QSpacerItem, QSizePolicy, QHBoxLayout, QLabel, QPushButton, QSlider, QVBoxLayout, \
+from PySide2 import QtCore, QtWidgets
+from PySide2.QtCore import QSize
+from PySide2.QtGui import QIcon
+from PySide2.QtWidgets import QSpacerItem, QSizePolicy, QHBoxLayout, QLabel, QPushButton, QSlider, QVBoxLayout, \
     QComboBox, QCheckBox, QListWidget, QListWidgetItem, QListView
 
 from widgets.HelpDialog import HelpDialog
