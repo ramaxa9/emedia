@@ -27,8 +27,11 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1366, 791)
-        MainWindow.setMinimumSize(QSize(1200, 600))
+        MainWindow.resize(1366, 800)
+        MainWindow.setMinimumSize(QSize(1200, 800))
+        icon = QIcon()
+        icon.addFile(u":/images/logo.png", QSize(), QIcon.Normal, QIcon.Off)
+        MainWindow.setWindowIcon(icon)
         self.verticalLayout_5 = QVBoxLayout(MainWindow)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
@@ -58,7 +61,7 @@ class Ui_MainWindow(object):
 
         self.list_loop = QComboBox(self.groupBox)
         self.list_loop.setObjectName(u"list_loop")
-        self.list_loop.setEnabled(False)
+        self.list_loop.setEnabled(True)
 
         self.horizontalLayout_2.addWidget(self.list_loop)
 
@@ -99,9 +102,9 @@ class Ui_MainWindow(object):
         self.btn_reload_screens.setObjectName(u"btn_reload_screens")
         self.btn_reload_screens.setMinimumSize(QSize(30, 0))
         self.btn_reload_screens.setMaximumSize(QSize(30, 16777215))
-        icon = QIcon()
-        icon.addFile(u":/icons/refresh-ccw.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btn_reload_screens.setIcon(icon)
+        icon1 = QIcon()
+        icon1.addFile(u":/icons/refresh-ccw.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_reload_screens.setIcon(icon1)
         self.btn_reload_screens.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_3.addWidget(self.btn_reload_screens)
@@ -118,9 +121,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.btn_fullscreen = QPushButton(self.groupBox_2)
         self.btn_fullscreen.setObjectName(u"btn_fullscreen")
-        icon1 = QIcon()
-        icon1.addFile(u":/icons/move.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btn_fullscreen.setIcon(icon1)
+        icon2 = QIcon()
+        icon2.addFile(u":/icons/move.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_fullscreen.setIcon(icon2)
         self.btn_fullscreen.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_5.addWidget(self.btn_fullscreen)
@@ -224,12 +227,20 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer_3)
 
+        self.btn_previous = QPushButton(MainWindow)
+        self.btn_previous.setObjectName(u"btn_previous")
+        self.btn_previous.setMinimumSize(QSize(50, 50))
+        icon3 = QIcon()
+        icon3.addFile(u":/icons/play-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_previous.setIcon(icon3)
+        self.btn_previous.setIconSize(QSize(36, 36))
+
+        self.horizontalLayout.addWidget(self.btn_previous)
+
         self.btn_play = QPushButton(MainWindow)
         self.btn_play.setObjectName(u"btn_play")
         self.btn_play.setMinimumSize(QSize(50, 50))
-        icon2 = QIcon()
-        icon2.addFile(u":/icons/play-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btn_play.setIcon(icon2)
+        self.btn_play.setIcon(icon3)
         self.btn_play.setIconSize(QSize(36, 36))
 
         self.horizontalLayout.addWidget(self.btn_play)
@@ -237,9 +248,9 @@ class Ui_MainWindow(object):
         self.btn_pause = QPushButton(MainWindow)
         self.btn_pause.setObjectName(u"btn_pause")
         self.btn_pause.setMinimumSize(QSize(50, 50))
-        icon3 = QIcon()
-        icon3.addFile(u":/icons/pause-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btn_pause.setIcon(icon3)
+        icon4 = QIcon()
+        icon4.addFile(u":/icons/pause-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_pause.setIcon(icon4)
         self.btn_pause.setIconSize(QSize(36, 36))
 
         self.horizontalLayout.addWidget(self.btn_pause)
@@ -247,12 +258,20 @@ class Ui_MainWindow(object):
         self.btn_stop = QPushButton(MainWindow)
         self.btn_stop.setObjectName(u"btn_stop")
         self.btn_stop.setMinimumSize(QSize(50, 50))
-        icon4 = QIcon()
-        icon4.addFile(u":/icons/stop-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btn_stop.setIcon(icon4)
+        icon5 = QIcon()
+        icon5.addFile(u":/icons/stop-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_stop.setIcon(icon5)
         self.btn_stop.setIconSize(QSize(36, 36))
 
         self.horizontalLayout.addWidget(self.btn_stop)
+
+        self.btn_next = QPushButton(MainWindow)
+        self.btn_next.setObjectName(u"btn_next")
+        self.btn_next.setMinimumSize(QSize(50, 50))
+        self.btn_next.setIcon(icon3)
+        self.btn_next.setIconSize(QSize(36, 36))
+
+        self.horizontalLayout.addWidget(self.btn_next)
 
         self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
@@ -263,6 +282,7 @@ class Ui_MainWindow(object):
 
         self.playlist = Playlist(MainWindow)
         self.playlist.setObjectName(u"playlist")
+        self.playlist.setProperty("showDropIndicator", False)
         self.playlist.setSortingEnabled(False)
 
         self.verticalLayout_4.addWidget(self.playlist)
@@ -337,9 +357,11 @@ class Ui_MainWindow(object):
         self.lbl_current_media.setText("")
         self.lbl_current_time.setText(QCoreApplication.translate("MainWindow", u"00:00:00", None))
         self.lbl_total_time.setText(QCoreApplication.translate("MainWindow", u"00:00:00", None))
+        self.btn_previous.setText("")
         self.btn_play.setText("")
         self.btn_pause.setText("")
         self.btn_stop.setText("")
+        self.btn_next.setText("")
         self.btn_playlist_add.setText(QCoreApplication.translate("MainWindow", u"Add", None))
         self.btn_playlist_del.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
     # retranslateUi

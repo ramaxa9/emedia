@@ -4,7 +4,7 @@ import subprocess
 
 import cv2
 from PySide6.QtCore import QDir, Qt, QSize
-from PySide6.QtGui import QPixmap, QImage, QPalette, QColor
+from PySide6.QtGui import QPixmap, QImage, QPalette, QColor, QIcon
 from PySide6.QtWidgets import QWidget, QMainWindow, QFileDialog, QApplication, QListView, QListWidget, QListWidgetItem
 
 from UI.MainWindow import Ui_MainWindow
@@ -17,7 +17,6 @@ from modules.VideoScreen import VideoWidget
 VIDEO_FILTER = [
             '*.mp4',
             '*.mov',
-            '*.mkv',
             '*.wmv',
             '*.avi',
             '*.webm',
@@ -32,7 +31,6 @@ IMAGE_FILTER = [
 
 AUDIO_FILTER = [
             '*.mp3',
-            '*.wav',
             '*.ogg',
             '*.flac',
             '*.aac',
@@ -47,6 +45,7 @@ class AbstractMainWindow(FramelessWindow):
         self.ui.setupUi(self)
 
         self.setWindowTitle('EMedia')
+
         self.setTitleBar(StandardTitleBar(self))
         self.titleBar.raise_()
 
@@ -57,6 +56,8 @@ class AbstractMainWindow(FramelessWindow):
         self.ui.btn_play.setIcon(qta.icon('mdi6.play', color='white'))
         self.ui.btn_pause.setIcon(qta.icon('mdi6.pause', color='white'))
         self.ui.btn_stop.setIcon(qta.icon('mdi6.stop', color='white'))
+        self.ui.btn_previous.setIcon(qta.icon('mdi6.skip-previous', color='white'))
+        self.ui.btn_next.setIcon(qta.icon('mdi6.skip-next', color='white'))
 
         self.ui.btn_reload_screens.setIcon(qta.icon('mdi6.reload', color='white'))
         self.ui.btn_reload_screens.setIconSize(QSize(20, 20))
@@ -77,7 +78,6 @@ class AbstractMainWindow(FramelessWindow):
         # Video screen
         self.video_screen_get_screens()
         self.VIDEO_SCREEN = VideoWidget()
-        self.video_screen_move(self.ui.list_screens.currentIndex())
 
     # Playlist
     def playlist_show_media_info(self, item: Item):
@@ -103,12 +103,14 @@ class AbstractMainWindow(FramelessWindow):
         self.ui.playlist.setViewMode(QListWidget.ViewMode.ListMode)
         # self.ui.playlist.setMovement(QListView.Movement.Snap)
         self.ui.playlist.setDefaultDropAction(Qt.DropAction.MoveAction)
+        self.ui.playlist.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
         self.ui.spin_playlist_icons_size.setValue(50)
 
     def playlist_view_mode_icons(self):
         self.ui.playlist.setViewMode(QListWidget.ViewMode.IconMode)
         self.ui.playlist.setMovement(QListView.Movement.Free)
         self.ui.playlist.setDefaultDropAction(Qt.DropAction.CopyAction)
+        self.ui.playlist.setSelectionMode(QListWidget.SelectionMode.ExtendedSelection)
         self.ui.spin_playlist_icons_size.setValue(200)
 
     def playlist_item_delete(self):
@@ -143,14 +145,18 @@ class AbstractMainWindow(FramelessWindow):
                         item.media_length = self.playlist_get_media_length(file)
                         item.setIcon(self.playlist_create_thumbnail(file))
 
-                    if '*' + file_ext in AUDIO_FILTER:
+                    elif '*' + file_ext in AUDIO_FILTER:
                         item.media_type = 'AUDIO'
                         item.media_length = self.playlist_get_media_length(file)
                         item.setIcon(QPixmap(os.path.join(os.getcwd(), 'images', 'speakers.png')))
 
-                    if '*' + file_ext in IMAGE_FILTER:
+                    elif '*' + file_ext in IMAGE_FILTER:
                         item.media_type = 'IMAGE'
                         item.setIcon(QPixmap(file))
+                    else:
+                        item.media_type = 'NOT SUPPORTED'
+                        item.media_length = self.playlist_get_media_length(file)
+                        item.setIcon(self.playlist_create_thumbnail(file))
 
                     item.setText(item.media_file)
                     self.ui.playlist.addItem(item)
@@ -187,6 +193,7 @@ class AbstractMainWindow(FramelessWindow):
     def video_screen_toggle_hide(self):
         if self.VIDEO_SCREEN.isHidden():
             self.VIDEO_SCREEN.show()
+            self.video_screen_move(self.ui.list_screens.currentIndex())
         else:
             self.VIDEO_SCREEN.hide()
 

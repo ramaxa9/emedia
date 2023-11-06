@@ -13,7 +13,7 @@ class VideoWidget(QStackedWidget):
     def __init__(self, mediafile: str = None):
         super(VideoWidget, self).__init__()
         self.setWindowTitle("EMedia Player")
-        self.setWindowIcon(QIcon(os.path.join(os.getcwd(), 'images', 'logo.png')))
+        self.setWindowIcon(QIcon(os.path.join(os.getcwd(), 'UI', 'images', 'logo.png')))
         # self.setMinimumSize(600, 400)
         # self.move(200, 200)
         # self.setWindowFlags(QtCore.Qt.WindowType.FramelessWindowHint)

@@ -15,13 +15,21 @@ from modules.PlayListItem import Item
 class MainWindow(AbstractMainWindow):
     def __init__(self):
         super().__init__()
+        self.setWindowIcon(QIcon(os.path.join(os.getcwd(), 'UI', 'images', 'logo.png')))
+        screen = QApplication.screens()[0].geometry()
+        window = self.geometry()
+        self.move(screen.width() / 2 - window.width() / 2, screen.height() / 2 - window.height() / 2)
 
         self.playlist_current_media = None
+
+        self.video_screen_move(self.ui.list_screens.currentIndex())
 
         # [SIGNALS] Player
         self.ui.btn_play.clicked.connect(self.player_play)
         self.ui.btn_pause.clicked.connect(self.player_pause)
         self.ui.btn_stop.clicked.connect(self.player_stop)
+        self.ui.btn_next.clicked.connect(self.player_next)
+        self.ui.btn_previous.clicked.connect(self.player_previous)
 
         # [SIGNALS] PLAYLIST
         self.ui.btn_playlist_add.clicked.connect(self.playlist_item_add)
@@ -41,7 +49,12 @@ class MainWindow(AbstractMainWindow):
         self.ui.list_screens.currentIndexChanged.connect(self.video_screen_move)
 
         self.VIDEO_SCREEN.videoPlayer.mediaStatusChanged.connect(self.media_status_handler)
-        # self.VIDEO_SCREEN.videoPlayer.playbackStateChanged.connect(self.player_loop_media)
+        self.VIDEO_SCREEN.videoPlayer.playbackStateChanged.connect(self.playback_state_handler)
+
+        self.VIDEO_SCREEN.videoPlayer.positionChanged.connect(self.on_media_position_changed)
+        self.VIDEO_SCREEN.videoPlayer.durationChanged.connect(self.media_slider_set_range)
+
+        self.ui.slider_progress.sliderMoved.connect(self.on_slider_position_changed)
 
         # [SIGNALS] Application
         self.titleBar.closeBtn.clicked.connect(self.close)
@@ -72,75 +85,53 @@ class MainWindow(AbstractMainWindow):
             self.VIDEO_SCREEN.videoPlayer.stop()
 
     def player_next(self):
-        # FIXME: rework
-        current = self.ui.playlist.currentRow()
-        count = self.ui.playlist.count()
-        prev = current - 1
-
-        next = current + 1
-
-        if next > count - 1:
-            return
+        if self.playlist_current_media < self.ui.playlist.count() - 1:
+            self.media_load(self.ui.playlist.item(self.playlist_current_media + 1))
+        elif self.playlist_current_media == self.ui.playlist.count() - 1:
+            self.media_load(self.ui.playlist.item(0))
         else:
-            self.ui.playlist.setCurrentRow(next)
-            self.loadSelected()
+            return
 
     def player_previous(self):
-        # FIXME: rework
-        current = self.ui.playlist.currentRow()
-        count = self.ui.playlist.count()
-        prev = current - 1
-        next = current + 1
-
-        if prev < 0:
-            return
+        if self.playlist_current_media > 0:
+            self.media_load(self.ui.playlist.item(self.playlist_current_media - 1))
         else:
-            self.ui.playlist.setCurrentRow(prev)
-            self.loadSelected()
+            return
 
-    def player_seek(self, value):
-        self.VIDEO_SCREEN.videoPlayer.setPosition(value)
-
-    # def player_loop_media(self, status):
-    #     # FIXME: rework
-    #     # if self.videoScreen.videoPlayer.PlaybackState == QMediaPlayer.PlaybackState.StoppedState:
-    #     # if QMediaPlayer.MediaStatus.EndOfMedia
-    #     print('Playback Status', status)
-    #     if self.ui.list_loop.currentIndex() == 0:
-    #         return
-    #     elif self.ui.list_loop.currentIndex() == 1:
-    #         # if self.videoScreen.videoPlayer.MediaStatus == QMediaPlayer.MediaStatus.
-    #         print("loop current")
-    #         self.VIDEO_SCREEN.videoPlayer.play()
-    #     elif self.ui.list_loop.currentIndex() == 2:
-    #         current = self.ui.playlist.currentIndex().row()
-    #         print("loop all", current)
-    #         if self.ui.playlist.count() <= current + 1:
-    #             print("first item", self.ui.playlist.count(), current)
-    #             self.ui.playlist.setCurrentRow(0)
-    #         else:
-    #             print("next item", self.ui.playlist.count(), current)
-    #             self.ui.playlist.setCurrentRow(self.ui.playlist.currentRow() + 1)
-    #
-    #         item = self.ui.playlist.item(self.ui.playlist.currentIndex())
-    #         self.media_load(item)
-    #         self.player_next()
-    #     else:
-    #         return
+    def player_loop_media(self):
+        # FIXME: rework
+        if self.ui.list_loop.currentIndex() == 1:
+            self.player_play()
+        elif self.ui.list_loop.currentIndex() == 2:
+            self.player_next()
+        else:
+            return
+        # if self.videoScreen.videoPlayer.PlaybackState == QMediaPlayer.PlaybackState.StoppedState:
+        # if QMediaPlayer.MediaStatus.EndOfMedia
+        # print('Playback Status', status)
+        # if self.ui.list_loop.currentIndex() == 0:
+        #     return
+        # elif self.ui.list_loop.currentIndex() == 1:
+        #     # if self.videoScreen.videoPlayer.MediaStatus == QMediaPlayer.MediaStatus.
+        #     print("loop current")
+        #     self.VIDEO_SCREEN.videoPlayer.play()
+        # elif self.ui.list_loop.currentIndex() == 2:
+        #     current = self.ui.playlist.currentIndex().row()
+        #     print("loop all", current)
+        #     if self.ui.playlist.count() <= current + 1:
+        #         print("first item", self.ui.playlist.count(), current)
+        #         self.ui.playlist.setCurrentRow(0)
+        #     else:
+        #         print("next item", self.ui.playlist.count(), current)
+        #         self.ui.playlist.setCurrentRow(self.ui.playlist.currentRow() + 1)
+        #
+        #     item = self.ui.playlist.item(self.ui.playlist.currentIndex())
+        #     self.media_load(item)
+        #     self.player_next()
+        # else:
+        #     return
 
     # MEDIA
-    def media_status_handler(self, status):
-        print('Media status', status)
-        if status == QMediaPlayer.MediaStatus.NoMedia:
-            pass
-
-        if status == QMediaPlayer.MediaStatus.LoadedMedia:
-            duration = datetime.timedelta(seconds=round(self.VIDEO_SCREEN.videoPlayer.duration() / 1000))
-            self.ui.lbl_total_time.setText(str(duration))
-
-        if status == QMediaPlayer.MediaStatus.EndOfMedia:
-            self.VIDEO_SCREEN.hide()
-
     def media_mark_loaded(self, item: QListWidgetItem):
         back_background = item.background()
         back_foreground = item.foreground()
@@ -162,43 +153,58 @@ class MainWindow(AbstractMainWindow):
 
             image = QPixmap(item.media_path)
             screen = QApplication.screens()[self.ui.list_screens.currentIndex()].geometry()
-
             image = image.scaled(screen.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.FastTransformation)
 
             self.VIDEO_SCREEN.stillViewer.setPixmap(image)
-            # self.VIDEO_SCREEN.stillViewer.setScaledContents(True)
             self.VIDEO_SCREEN.stillViewer.adjustSize()
             self.player_stop()
         else:
             self.VIDEO_SCREEN.setCurrentIndex(0)
             self.VIDEO_SCREEN.videoPlayer.setSource(QUrl.fromLocalFile(item.media_path))
 
-        if item.media_type == "AUDIO":
-            self.VIDEO_SCREEN.hide()
-        else:
-            self.VIDEO_SCREEN.show()
-
         self.playlist_current_media = self.ui.playlist.row(item)
         self.ui.lbl_current_media.setText(f'{self.playlist_current_media} | {item.media_length} | {item.media_file}')
-        self.media_mark_loaded(item)
 
         if self.ui.chk_doubleclick_play.isChecked():
             self.player_play()
 
-    def media_loaded(self, status: QMediaPlayer.MediaStatus):
+    def media_status_handler(self, status: QMediaPlayer.MediaStatus):
         print('Media status', status)
-        duration = datetime.timedelta(seconds=round(self.VIDEO_SCREEN.videoPlayer.duration() / 1000))
-        self.ui.lbl_total_time.setText(str(duration))
+        if status == QMediaPlayer.MediaStatus.NoMedia:
+            pass
 
-    def media_position_changed(self, position):
+        if status == QMediaPlayer.MediaStatus.LoadingMedia:
+            pass
+
+        if status == QMediaPlayer.MediaStatus.LoadedMedia:
+            pass
+
+        if status == QMediaPlayer.MediaStatus.EndOfMedia:
+            self.VIDEO_SCREEN.videoPlayer.setPosition(0)
+            self.ui.slider_progress.setValue(0)
+            self.player_loop_media()
+            # TODO: show custom image on playback end
+
+    def playback_state_handler(self, status: QMediaPlayer.PlaybackState):
+        print('Playback status', status)
+
+        if status == QMediaPlayer.PlaybackState.PlayingState:
+           pass
+
+        if status == QMediaPlayer.PlaybackState.StoppedState:
+            pass
+
+    def media_slider_set_range(self, duration):
+        counter = datetime.timedelta(seconds=round(duration / 1000))
+        self.ui.lbl_total_time.setText(str(counter))
+        self.ui.slider_progress.setRange(0, duration)
+
+    def on_media_position_changed(self, position):
+        self.ui.slider_progress.setValue(position)
         counter = datetime.timedelta(seconds=round(position / 1000))
         self.ui.lbl_current_time.setText(str(counter))
-        self.ui.slider_progress.positionSlider.setValue(position)
 
-    def media_duration_changed(self, duration):
-        self.ui.slider_progress.positionSlider.setRange(0, duration)
-
-    def media_set_position(self, position):
+    def on_slider_position_changed(self, position):
         self.VIDEO_SCREEN.videoPlayer.setPosition(position)
 
     def closeEvent(self, event):
@@ -221,6 +227,4 @@ if __name__ == '__main__':
     videoplayer = MainWindow()
     videoplayer.resize(640, 480)
     videoplayer.show()
-    # videoplayer.getScreens()
-    videoplayer.setWindowIcon(QIcon(os.path.join(os.getcwd(), 'images', 'logo.png')))
     sys.exit(app.exec())
