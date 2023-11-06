@@ -10,3 +10,6 @@
 ```
 pip install PySide6 opencv-python QtAwesome
 ```
+
+Also you need ffprobe, put it in the program folder
+[https://ffbinaries.com/downloads](https://ffbinaries.com/downloads)
