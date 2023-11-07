@@ -1,12 +1,10 @@
 import os
 
-from PySide6 import QtCore, QtWidgets
-from PySide6.QtGui import QIcon, QPixmap, QPalette, Qt
+from PySide6 import QtCore
+from PySide6.QtGui import QIcon, QPalette, Qt
 from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PySide6.QtMultimediaWidgets import QVideoWidget
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QStackedWidget, QWidget, QSizePolicy
-
-from qframelesswindow import FramelessWindow, StandardTitleBar
+from PySide6.QtWidgets import QLabel, QStackedWidget, QSizePolicy
 
 
 class VideoWidget(QStackedWidget):
@@ -14,9 +12,6 @@ class VideoWidget(QStackedWidget):
         super(VideoWidget, self).__init__()
         self.setWindowTitle("EMedia Player")
         self.setWindowIcon(QIcon(os.path.join(os.getcwd(), 'UI', 'images', 'logo.png')))
-        # self.setMinimumSize(600, 400)
-        # self.move(200, 200)
-        # self.setWindowFlags(QtCore.Qt.WindowType.FramelessWindowHint)
         self.move(0, 0)
         self.setMinimumSize(800, 600)
 
@@ -32,25 +27,11 @@ class VideoWidget(QStackedWidget):
         self.stillViewer.setBackgroundRole(QPalette.Base)
         self.stillViewer.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
 
-        # self.stillViewer.setScaledContents(True)
-        # self.stillViewer.setStyleSheet('border:1 solid white;')
-        # self.stillViewer.adjustSize()
-        # self.stillViewer.setScaledContents(True)
-
         self.setStyleSheet('background-color:black;')
         self.addWidget(self.videoWidget)
         self.addWidget(self.stillViewer)
 
         self.setCurrentIndex(1)
-
-        # mainLayout = QHBoxLayout()
-        # mainLayout.addWidget(self.SCREEN)
-        # # mainLayout.addWidget(self.controls)
-        # mainLayout.setContentsMargins(0, 0, 0, 0)
-        # centralWidget = QtWidgets.QWidget()
-        # self.setCentralWidget(centralWidget)
-        # centralWidget.setLayout(mainLayout)
-        # self.setLayout(mainLayout)
 
         self.offset = None
 

@@ -87,11 +87,7 @@ class AbstractMainWindow(FramelessWindow):
         self.ui.lbl_media_info.setText(text)
 
     def playlist_icons_size(self, value):
-        iWidth = value
-        iHeight = value
-
-        self.ui.playlist.setIconSize(QSize(iWidth, iHeight))
-        # self.ui.playlist.setGridSize(QSize(iWidth + 5, iHeight + 5))
+        self.ui.playlist.setIconSize(QSize(value.width(), value.height()))
 
     def playlist_view_mode(self):
         if self.ui.btn_view_mode.isChecked():
@@ -101,7 +97,6 @@ class AbstractMainWindow(FramelessWindow):
 
     def playlist_view_mode_list(self):
         self.ui.playlist.setViewMode(QListWidget.ViewMode.ListMode)
-        # self.ui.playlist.setMovement(QListView.Movement.Snap)
         self.ui.playlist.setDefaultDropAction(Qt.DropAction.MoveAction)
         self.ui.playlist.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
         self.ui.spin_playlist_icons_size.setValue(50)
@@ -163,7 +158,7 @@ class AbstractMainWindow(FramelessWindow):
 
     def playlist_create_thumbnail(self, file):
         cap = cv2.VideoCapture(file)
-        frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+        #frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
         # frame = random.randrange(20, int(frame_count) - 20)
         cap.set(cv2.CAP_PROP_POS_FRAMES, 50)
         ret, frame = cap.read()
@@ -204,7 +199,6 @@ class AbstractMainWindow(FramelessWindow):
             self.ui.list_screens.addItem(QApplication.screens()[i].name())
 
         self.ui.list_screens.setCurrentIndex(count - 1)
-        # self.video_screen_fullscreen()
 
     def video_screen_move(self, screen):
         self.VIDEO_SCREEN.showNormal()

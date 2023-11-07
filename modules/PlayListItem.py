@@ -1,5 +1,4 @@
-from PySide6 import QtCore
-from PySide6.QtWidgets import QListWidgetItem, QListWidget
+from PySide6.QtWidgets import QListWidgetItem
 
 
 class Item(QListWidgetItem):

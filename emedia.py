@@ -3,7 +3,7 @@ import os
 import sys
 
 from PySide6 import QtWidgets
-from PySide6.QtCore import QUrl, QSize
+from PySide6.QtCore import QUrl
 from PySide6.QtGui import QIcon, QColor, QPixmap, Qt
 from PySide6.QtMultimedia import QMediaPlayer
 from PySide6.QtWidgets import QApplication, QListWidgetItem
@@ -99,37 +99,12 @@ class MainWindow(AbstractMainWindow):
             return
 
     def player_loop_media(self):
-        # FIXME: rework
         if self.ui.list_loop.currentIndex() == 1:
             self.player_play()
         elif self.ui.list_loop.currentIndex() == 2:
             self.player_next()
         else:
             return
-        # if self.videoScreen.videoPlayer.PlaybackState == QMediaPlayer.PlaybackState.StoppedState:
-        # if QMediaPlayer.MediaStatus.EndOfMedia
-        # print('Playback Status', status)
-        # if self.ui.list_loop.currentIndex() == 0:
-        #     return
-        # elif self.ui.list_loop.currentIndex() == 1:
-        #     # if self.videoScreen.videoPlayer.MediaStatus == QMediaPlayer.MediaStatus.
-        #     print("loop current")
-        #     self.VIDEO_SCREEN.videoPlayer.play()
-        # elif self.ui.list_loop.currentIndex() == 2:
-        #     current = self.ui.playlist.currentIndex().row()
-        #     print("loop all", current)
-        #     if self.ui.playlist.count() <= current + 1:
-        #         print("first item", self.ui.playlist.count(), current)
-        #         self.ui.playlist.setCurrentRow(0)
-        #     else:
-        #         print("next item", self.ui.playlist.count(), current)
-        #         self.ui.playlist.setCurrentRow(self.ui.playlist.currentRow() + 1)
-        #
-        #     item = self.ui.playlist.item(self.ui.playlist.currentIndex())
-        #     self.media_load(item)
-        #     self.player_next()
-        # else:
-        #     return
 
     # MEDIA
     def media_mark_loaded(self, item: QListWidgetItem):
