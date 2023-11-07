@@ -5,10 +5,11 @@
 - PySide6
 - opencv-python
 - QtAwesome
+- PySideSix-Frameless-Window
 
 ### Install requirements:
 ```
-pip install PySide6 opencv-python QtAwesome
+pip install PySide6 opencv-python QtAwesome PySideSix-Frameless-Window
 ```
 
 Also you need ffprobe, put it in the program folder
