@@ -24,6 +24,8 @@ class MainWindow(AbstractMainWindow):
 
         self.video_screen_move(self.ui.list_screens.currentIndex())
 
+        self.ui.slider_progress.setRange(0, 0)
+
         # [SIGNALS] Player
         self.ui.btn_play.clicked.connect(self.player_play)
         self.ui.btn_pause.clicked.connect(self.player_pause)
@@ -85,6 +87,9 @@ class MainWindow(AbstractMainWindow):
             self.VIDEO_SCREEN.videoPlayer.stop()
 
     def player_next(self):
+        if self.ui.playlist.count() <= 0:
+            return
+
         if self.playlist_current_media < self.ui.playlist.count() - 1:
             self.media_load(self.ui.playlist.item(self.playlist_current_media + 1))
         elif self.playlist_current_media == self.ui.playlist.count() - 1:
@@ -93,6 +98,9 @@ class MainWindow(AbstractMainWindow):
             return
 
     def player_previous(self):
+        if self.ui.playlist.count() <= 0:
+            return
+
         if self.playlist_current_media > 0:
             self.media_load(self.ui.playlist.item(self.playlist_current_media - 1))
         else:

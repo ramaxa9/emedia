@@ -210,6 +210,27 @@ class Ui_MainWindow(object):
         self.verticalLayout_4 = QVBoxLayout()
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.verticalLayout_4.setContentsMargins(5, 5, 5, 5)
+        self.lbl_media_info = QLabel(MainWindow)
+        self.lbl_media_info.setObjectName(u"lbl_media_info")
+        self.lbl_media_info.setMinimumSize(QSize(100, 0))
+        palette = QPalette()
+        brush = QBrush(QColor(174, 207, 247, 255))
+        brush.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Active, QPalette.Link, brush)
+        palette.setBrush(QPalette.Inactive, QPalette.Link, brush)
+        palette.setBrush(QPalette.Disabled, QPalette.Link, brush)
+        self.lbl_media_info.setPalette(palette)
+        self.lbl_media_info.setWordWrap(True)
+
+        self.verticalLayout_4.addWidget(self.lbl_media_info)
+
+        self.playlist = Playlist(MainWindow)
+        self.playlist.setObjectName(u"playlist")
+        self.playlist.setProperty("showDropIndicator", False)
+        self.playlist.setSortingEnabled(False)
+
+        self.verticalLayout_4.addWidget(self.playlist)
+
         self.horizontalLayout_11 = QHBoxLayout()
         self.horizontalLayout_11.setSpacing(20)
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
@@ -307,35 +328,6 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_4.addLayout(self.horizontalLayout)
-
-        self.playlist = Playlist(MainWindow)
-        self.playlist.setObjectName(u"playlist")
-        self.playlist.setProperty("showDropIndicator", False)
-        self.playlist.setSortingEnabled(False)
-
-        self.verticalLayout_4.addWidget(self.playlist)
-
-        self.horizontalLayout_6 = QHBoxLayout()
-        self.horizontalLayout_6.setSpacing(6)
-        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.horizontalLayout_6.setContentsMargins(0, -1, 0, -1)
-        self.lbl_media_info = QLabel(MainWindow)
-        self.lbl_media_info.setObjectName(u"lbl_media_info")
-        self.lbl_media_info.setMinimumSize(QSize(100, 0))
-        palette = QPalette()
-        brush = QBrush(QColor(174, 207, 247, 255))
-        brush.setStyle(Qt.SolidPattern)
-        palette.setBrush(QPalette.Active, QPalette.Link, brush)
-        palette.setBrush(QPalette.Inactive, QPalette.Link, brush)
-        palette.setBrush(QPalette.Disabled, QPalette.Link, brush)
-        self.lbl_media_info.setPalette(palette)
-        self.lbl_media_info.setWordWrap(True)
-
-        self.horizontalLayout_6.addWidget(self.lbl_media_info)
-
-        self.horizontalLayout_6.setStretch(0, 1)
-
-        self.verticalLayout_4.addLayout(self.horizontalLayout_6)
 
 
         self.horizontalLayout_8.addLayout(self.verticalLayout_4)
