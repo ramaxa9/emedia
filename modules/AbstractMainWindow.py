@@ -4,7 +4,7 @@ import subprocess
 
 import cv2
 from PySide6.QtCore import QDir, Qt, QSize
-from PySide6.QtGui import QPixmap, QImage, QPalette, QColor, QIcon
+from PySide6.QtGui import QPixmap, QImage, QPalette, QColor, QIcon, QFont
 from PySide6.QtWidgets import QWidget, QMainWindow, QFileDialog, QApplication, QListView, QListWidget, QListWidgetItem
 
 from UI.MainWindow import Ui_MainWindow
@@ -32,9 +32,7 @@ IMAGE_FILTER = [
 AUDIO_FILTER = [
             '*.mp3',
             '*.ogg',
-            '*.flac',
             '*.aac',
-            '*.wma',
         ]
 
 
@@ -87,7 +85,7 @@ class AbstractMainWindow(FramelessWindow):
         self.ui.lbl_media_info.setText(text)
 
     def playlist_icons_size(self, value):
-        self.ui.playlist.setIconSize(QSize(value.width(), value.height()))
+        self.ui.playlist.setIconSize(QSize(value, value))
 
     def playlist_view_mode(self):
         if self.ui.btn_view_mode.isChecked():
@@ -109,8 +107,6 @@ class AbstractMainWindow(FramelessWindow):
         self.ui.spin_playlist_icons_size.setValue(200)
 
     def playlist_item_delete(self):
-        # IDEA: clear mediaplayer>media object on media delete
-
         item = self.ui.playlist.currentRow()
         self.ui.playlist.takeItem(item)
 
@@ -143,7 +139,7 @@ class AbstractMainWindow(FramelessWindow):
                     elif '*' + file_ext in AUDIO_FILTER:
                         item.media_type = 'AUDIO'
                         item.media_length = self.playlist_get_media_length(file)
-                        item.setIcon(QPixmap(os.path.join(os.getcwd(), 'images', 'speakers.png')))
+                        item.setIcon(QPixmap(os.path.join(os.getcwd(), 'UI', 'images', 'speakers.png')))
 
                     elif '*' + file_ext in IMAGE_FILTER:
                         item.media_type = 'IMAGE'
@@ -154,6 +150,7 @@ class AbstractMainWindow(FramelessWindow):
                         item.setIcon(self.playlist_create_thumbnail(file))
 
                     item.setText(item.media_file)
+                    item.setFont(QFont("Tahoma", 16))
                     self.ui.playlist.addItem(item)
 
     def playlist_create_thumbnail(self, file):

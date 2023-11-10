@@ -169,6 +169,34 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_6.addLayout(self.horizontalLayout_10)
 
+        self.verticalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Fixed)
+
+        self.verticalLayout_6.addItem(self.verticalSpacer_2)
+
+        self.label_4 = QLabel(self.groupBox_3)
+        self.label_4.setObjectName(u"label_4")
+
+        self.verticalLayout_6.addWidget(self.label_4)
+
+        self.horizontalLayout_9 = QHBoxLayout()
+        self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
+        self.btn_playlist_add = QPushButton(self.groupBox_3)
+        self.btn_playlist_add.setObjectName(u"btn_playlist_add")
+        self.btn_playlist_add.setMinimumSize(QSize(0, 30))
+        self.btn_playlist_add.setIconSize(QSize(24, 24))
+
+        self.horizontalLayout_9.addWidget(self.btn_playlist_add)
+
+        self.btn_playlist_del = QPushButton(self.groupBox_3)
+        self.btn_playlist_del.setObjectName(u"btn_playlist_del")
+        self.btn_playlist_del.setMinimumSize(QSize(0, 30))
+        self.btn_playlist_del.setIconSize(QSize(24, 24))
+
+        self.horizontalLayout_9.addWidget(self.btn_playlist_del)
+
+
+        self.verticalLayout_6.addLayout(self.horizontalLayout_9)
+
 
         self.verticalLayout_3.addWidget(self.groupBox_3)
 
@@ -305,24 +333,6 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_6.addWidget(self.lbl_media_info)
 
-        self.horizontalSpacer_2 = QSpacerItem(30, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_6.addItem(self.horizontalSpacer_2)
-
-        self.btn_playlist_add = QPushButton(MainWindow)
-        self.btn_playlist_add.setObjectName(u"btn_playlist_add")
-        self.btn_playlist_add.setMinimumSize(QSize(0, 30))
-        self.btn_playlist_add.setIconSize(QSize(24, 24))
-
-        self.horizontalLayout_6.addWidget(self.btn_playlist_add)
-
-        self.btn_playlist_del = QPushButton(MainWindow)
-        self.btn_playlist_del.setObjectName(u"btn_playlist_del")
-        self.btn_playlist_del.setMinimumSize(QSize(0, 30))
-        self.btn_playlist_del.setIconSize(QSize(24, 24))
-
-        self.horizontalLayout_6.addWidget(self.btn_playlist_del)
-
         self.horizontalLayout_6.setStretch(0, 1)
 
         self.verticalLayout_4.addLayout(self.horizontalLayout_6)
@@ -353,6 +363,9 @@ class Ui_MainWindow(object):
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Playlist", None))
         self.btn_view_mode.setText(QCoreApplication.translate("MainWindow", u"List", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Icons size", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Media", None))
+        self.btn_playlist_add.setText(QCoreApplication.translate("MainWindow", u"Add", None))
+        self.btn_playlist_del.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Current media", None))
         self.lbl_current_media.setText("")
         self.lbl_current_time.setText(QCoreApplication.translate("MainWindow", u"00:00:00", None))
@@ -362,7 +375,5 @@ class Ui_MainWindow(object):
         self.btn_pause.setText("")
         self.btn_stop.setText("")
         self.btn_next.setText("")
-        self.btn_playlist_add.setText(QCoreApplication.translate("MainWindow", u"Add", None))
-        self.btn_playlist_del.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
     # retranslateUi
 
