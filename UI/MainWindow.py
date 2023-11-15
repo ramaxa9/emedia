@@ -15,9 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QGroupBox,
-    QHBoxLayout, QLabel, QListWidgetItem, QPushButton,
-    QSizePolicy, QSlider, QSpacerItem, QSpinBox,
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QComboBox,
+    QGroupBox, QHBoxLayout, QHeaderView, QLabel,
+    QListWidgetItem, QPushButton, QSizePolicy, QSlider,
+    QSpacerItem, QSpinBox, QTreeWidget, QTreeWidgetItem,
     QVBoxLayout, QWidget)
 
 from modules.Playlist import Playlist
@@ -37,8 +38,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.w_titlebar = QWidget(MainWindow)
         self.w_titlebar.setObjectName(u"w_titlebar")
-        self.w_titlebar.setMinimumSize(QSize(0, 30))
-        self.w_titlebar.setMaximumSize(QSize(16777215, 30))
+        self.w_titlebar.setMinimumSize(QSize(0, 32))
+        self.w_titlebar.setMaximumSize(QSize(16777215, 32))
 
         self.verticalLayout_5.addWidget(self.w_titlebar)
 
@@ -82,20 +83,6 @@ class Ui_MainWindow(object):
         self.groupBox_2.setObjectName(u"groupBox_2")
         self.verticalLayout_2 = QVBoxLayout(self.groupBox_2)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.btn_show_hide_screen = QPushButton(self.groupBox_2)
-        self.btn_show_hide_screen.setObjectName(u"btn_show_hide_screen")
-
-        self.horizontalLayout_4.addWidget(self.btn_show_hide_screen)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_4.addItem(self.horizontalSpacer)
-
-
-        self.verticalLayout_2.addLayout(self.horizontalLayout_4)
-
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.btn_reload_screens = QPushButton(self.groupBox_2)
@@ -135,6 +122,20 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_5)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_4.addItem(self.horizontalSpacer)
+
+        self.btn_show_hide_screen = QPushButton(self.groupBox_2)
+        self.btn_show_hide_screen.setObjectName(u"btn_show_hide_screen")
+
+        self.horizontalLayout_4.addWidget(self.btn_show_hide_screen)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_4)
 
 
         self.verticalLayout_3.addWidget(self.groupBox_2)
@@ -200,9 +201,27 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.groupBox_3)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.groupBox_4 = QGroupBox(MainWindow)
+        self.groupBox_4.setObjectName(u"groupBox_4")
+        self.verticalLayout_7 = QVBoxLayout(self.groupBox_4)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.verticalLayout_7.setContentsMargins(0, 15, 0, 0)
+        self.media_info = QTreeWidget(self.groupBox_4)
+        __qtreewidgetitem = QTreeWidgetItem()
+        __qtreewidgetitem.setText(0, u"1");
+        self.media_info.setHeaderItem(__qtreewidgetitem)
+        self.media_info.setObjectName(u"media_info")
+        self.media_info.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.media_info.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.media_info.setRootIsDecorated(False)
+        self.media_info.setItemsExpandable(False)
+        self.media_info.setExpandsOnDoubleClick(False)
+        self.media_info.header().setVisible(False)
 
-        self.verticalLayout_3.addItem(self.verticalSpacer)
+        self.verticalLayout_7.addWidget(self.media_info)
+
+
+        self.verticalLayout_3.addWidget(self.groupBox_4)
 
 
         self.horizontalLayout_8.addLayout(self.verticalLayout_3)
@@ -210,20 +229,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_4 = QVBoxLayout()
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.verticalLayout_4.setContentsMargins(5, 5, 5, 5)
-        self.lbl_media_info = QLabel(MainWindow)
-        self.lbl_media_info.setObjectName(u"lbl_media_info")
-        self.lbl_media_info.setMinimumSize(QSize(100, 0))
-        palette = QPalette()
-        brush = QBrush(QColor(174, 207, 247, 255))
-        brush.setStyle(Qt.SolidPattern)
-        palette.setBrush(QPalette.Active, QPalette.Link, brush)
-        palette.setBrush(QPalette.Inactive, QPalette.Link, brush)
-        palette.setBrush(QPalette.Disabled, QPalette.Link, brush)
-        self.lbl_media_info.setPalette(palette)
-        self.lbl_media_info.setWordWrap(True)
-
-        self.verticalLayout_4.addWidget(self.lbl_media_info)
-
         self.playlist = Playlist(MainWindow)
         self.playlist.setObjectName(u"playlist")
         self.playlist.setProperty("showDropIndicator", False)
@@ -348,16 +353,17 @@ class Ui_MainWindow(object):
         self.label.setText(QCoreApplication.translate("MainWindow", u"Loop", None))
         self.chk_doubleclick_play.setText(QCoreApplication.translate("MainWindow", u"Doubleclick to play", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"Screen", None))
-        self.btn_show_hide_screen.setText(QCoreApplication.translate("MainWindow", u"Show/Hide screen", None))
         self.btn_reload_screens.setText("")
         self.btn_fullscreen.setText(QCoreApplication.translate("MainWindow", u"Fullscreen", None))
         self.chk_play_on_fullscreen.setText(QCoreApplication.translate("MainWindow", u"Play on fullscreen", None))
+        self.btn_show_hide_screen.setText(QCoreApplication.translate("MainWindow", u"Show/Hide screen", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Playlist", None))
         self.btn_view_mode.setText(QCoreApplication.translate("MainWindow", u"List", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Icons size", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Media", None))
         self.btn_playlist_add.setText(QCoreApplication.translate("MainWindow", u"Add", None))
         self.btn_playlist_del.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
+        self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"Media info", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Current media", None))
         self.lbl_current_media.setText("")
         self.lbl_current_time.setText(QCoreApplication.translate("MainWindow", u"00:00:00", None))

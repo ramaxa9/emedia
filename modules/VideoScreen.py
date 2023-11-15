@@ -6,8 +6,10 @@ from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PySide6.QtMultimediaWidgets import QVideoWidget
 from PySide6.QtWidgets import QLabel, QStackedWidget, QSizePolicy
 
+from modules.StackedWidget import SlidingStackedWidget
 
-class VideoWidget(QStackedWidget):
+
+class VideoWidget(SlidingStackedWidget):
     def __init__(self, mediafile: str = None):
         super(VideoWidget, self).__init__()
         self.setWindowTitle("EMedia Player")

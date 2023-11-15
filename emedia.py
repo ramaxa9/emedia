@@ -18,7 +18,7 @@ class MainWindow(AbstractMainWindow):
         self.setWindowIcon(QIcon(os.path.join(os.getcwd(), 'UI', 'images', 'logo.png')))
         screen = QApplication.screens()[0].geometry()
         window = self.geometry()
-        self.move(screen.width() / 2 - window.width() / 2, screen.height() / 2 - window.height() / 2)
+        self.move(int(screen.width() / 2 - window.width() / 2), int(screen.height() / 2 - window.height() / 2))
 
         self.playlist_current_media = None
 
@@ -132,23 +132,24 @@ class MainWindow(AbstractMainWindow):
     def media_load(self, item: Item):
         if item.media_type == "IMAGE":
             self.VIDEO_SCREEN.showFullScreen()
-            self.VIDEO_SCREEN.setCurrentIndex(1)
+            self.VIDEO_SCREEN.slideInIdx(1)
 
             image = QPixmap(item.media_path)
             screen = QApplication.screens()[self.ui.list_screens.currentIndex()].geometry()
-            image = image.scaled(screen.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.FastTransformation)
+            image = image.scaled(screen.size(), Qt.AspectRatioMode.KeepAspectRatio,
+                                 Qt.TransformationMode.FastTransformation)
 
             self.VIDEO_SCREEN.stillViewer.setPixmap(image)
             self.VIDEO_SCREEN.stillViewer.adjustSize()
             self.player_stop()
         else:
-            self.VIDEO_SCREEN.setCurrentIndex(0)
+            self.VIDEO_SCREEN.slideInIdx(0)
             self.VIDEO_SCREEN.videoPlayer.setSource(QUrl.fromLocalFile(item.media_path))
 
         self.playlist_current_media = self.ui.playlist.row(item)
-        self.ui.lbl_current_media.setText(f'{self.playlist_current_media} | {item.media_length} | {item.media_file}')
+        self.ui.lbl_current_media.setText(item.media_file)
 
-        if self.ui.chk_doubleclick_play.isChecked():
+        if self.ui.chk_doubleclick_play.isChecked() and item.media_type != "IMAGE":
             self.player_play()
 
     def media_status_handler(self, status: QMediaPlayer.MediaStatus):
@@ -172,7 +173,7 @@ class MainWindow(AbstractMainWindow):
         print('Playback status', status)
 
         if status == QMediaPlayer.PlaybackState.PlayingState:
-           pass
+            pass
 
         if status == QMediaPlayer.PlaybackState.StoppedState:
             pass

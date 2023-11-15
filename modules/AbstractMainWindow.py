@@ -1,11 +1,14 @@
 import datetime
 import os.path
 import subprocess
+import threading
+from collections import OrderedDict
 
 import cv2
 from PySide6.QtCore import QDir, Qt, QSize
 from PySide6.QtGui import QPixmap, QImage, QPalette, QColor, QIcon, QFont
-from PySide6.QtWidgets import QWidget, QMainWindow, QFileDialog, QApplication, QListView, QListWidget, QListWidgetItem
+from PySide6.QtWidgets import QWidget, QMainWindow, QFileDialog, QApplication, QListView, QListWidget, QListWidgetItem, \
+    QTableWidgetItem, QTreeWidgetItem
 
 from UI.MainWindow import Ui_MainWindow
 from qframelesswindow import FramelessWindow, StandardTitleBar
@@ -15,25 +18,25 @@ from modules.PlayListItem import Item
 from modules.VideoScreen import VideoWidget
 
 VIDEO_FILTER = [
-            '*.mp4',
-            '*.mov',
-            '*.wmv',
-            '*.avi',
-            '*.webm',
-            '*.flv',
-            '*.f4v',
-        ]
+    '*.mp4',
+    '*.mov',
+    '*.wmv',
+    '*.avi',
+    '*.webm',
+    '*.flv',
+    '*.f4v',
+]
 
 IMAGE_FILTER = [
-            '*.png',
-            '*.jpg'
-        ]
+    '*.png',
+    '*.jpg'
+]
 
 AUDIO_FILTER = [
-            '*.mp3',
-            '*.ogg',
-            '*.aac',
-        ]
+    '*.mp3',
+    '*.ogg',
+    '*.aac',
+]
 
 
 class AbstractMainWindow(FramelessWindow):
@@ -46,6 +49,7 @@ class AbstractMainWindow(FramelessWindow):
 
         self.setTitleBar(StandardTitleBar(self))
         self.titleBar.raise_()
+        self.ui.w_titlebar.setStyleSheet('background-color: #444;')
 
         qss = open(os.path.join(os.getcwd(), 'UI', 'Dark.qss')).read()
         self.setStyleSheet(qss)
@@ -79,10 +83,30 @@ class AbstractMainWindow(FramelessWindow):
 
     # Playlist
     def playlist_show_media_info(self, item: Item):
-        text = (f'{item.media_type} | {item.media_length} | '
-                f'<a href={os.path.split(item.media_path)[0]}><span style="color: #aecff7; ">{item.media_file}</span></a>')
+        self.ui.media_info.clear()
 
-        self.ui.lbl_media_info.setText(text)
+        media_info = OrderedDict({
+            'media_type': item.media_type,
+            'media_file': item.media_file,
+            'media_path': item.media_path,
+            'media_length': item.media_length,
+        })
+
+        self.ui.media_info.setColumnCount(2)
+        self.ui.media_info.setHeaderHidden(False)
+        self.ui.media_info.setHeaderLabels(['Key', 'Value'])
+
+        for key, value in media_info.items():
+            list_item = QTreeWidgetItem(self.ui.media_info)
+            list_item.setText(0, str(key))
+            list_item.setText(1, str(value))
+            list_item.setToolTip(1, str(value))
+            self.ui.media_info.setCurrentItem(list_item)
+        #
+        # text = (f'{item.media_type} | {item.media_length} | '
+        #         f'<a href={os.path.split(item.media_path)[0]}><span style="color: #aecff7; ">{item.media_file}</span></a>')
+        #
+        # self.ui.lbl_media_info.setText(text)
 
     def playlist_icons_size(self, value):
         self.ui.playlist.setIconSize(QSize(value, value))
@@ -97,6 +121,7 @@ class AbstractMainWindow(FramelessWindow):
         self.ui.playlist.setViewMode(QListWidget.ViewMode.ListMode)
         self.ui.playlist.setDefaultDropAction(Qt.DropAction.MoveAction)
         self.ui.playlist.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
+        self.ui.playlist.setWrapping(True)
         self.ui.spin_playlist_icons_size.setValue(50)
 
     def playlist_view_mode_icons(self):
@@ -104,6 +129,7 @@ class AbstractMainWindow(FramelessWindow):
         self.ui.playlist.setMovement(QListView.Movement.Free)
         self.ui.playlist.setDefaultDropAction(Qt.DropAction.CopyAction)
         self.ui.playlist.setSelectionMode(QListWidget.SelectionMode.ExtendedSelection)
+        self.ui.playlist.setWrapping(True)
         self.ui.spin_playlist_icons_size.setValue(200)
 
     def playlist_item_delete(self):
@@ -112,6 +138,7 @@ class AbstractMainWindow(FramelessWindow):
 
     def playlist_item_add(self):
         # TODO: put in thread
+
         jointypes = ' '.join(VIDEO_FILTER + AUDIO_FILTER + IMAGE_FILTER)
         filetypes = (f"Supported files ({jointypes});;Video files ({' '.join(VIDEO_FILTER)});;"
                      f"Images({' '.join(IMAGE_FILTER)});;Audio files ({' '.join(AUDIO_FILTER)});;All files(*)")
@@ -119,43 +146,55 @@ class AbstractMainWindow(FramelessWindow):
         file_dialog = QFileDialog(self)
         file_names = file_dialog.getOpenFileNames(self, "Open Media", QDir.homePath(), filetypes)
 
-        for file in file_names[0]:
-            if os.path.split(file)[-1] in [self.ui.playlist.item(i).media_file for i in range(self.ui.playlist.count())]:
-                # check if name already in playlist
-                print("File already in playlist!")
-            else:
-                if os.path.exists(file):
-                    item = Item()
-                    filename, file_ext = os.path.splitext(file)
+        def worker():
+            for file in file_names[0]:
+                if os.path.split(file)[-1] in [self.ui.playlist.item(i).media_file for i in
+                                               range(self.ui.playlist.count())]:
+                    # check if name already in playlist
+                    print("File already in playlist!")
+                else:
+                    if os.path.exists(file):
+                        item = Item()
+                        filename, file_ext = os.path.splitext(file)
 
-                    item.media_file = os.path.split(file)[-1]
-                    item.media_path = file
+                        item.media_file = os.path.split(file)[-1]
+                        item.media_path = file
 
-                    if '*' + file_ext in VIDEO_FILTER:
-                        item.media_type = 'VIDEO'
-                        item.media_length = self.playlist_get_media_length(file)
-                        item.setIcon(self.playlist_create_thumbnail(file))
+                        file_supported = True
 
-                    elif '*' + file_ext in AUDIO_FILTER:
-                        item.media_type = 'AUDIO'
-                        item.media_length = self.playlist_get_media_length(file)
-                        item.setIcon(QPixmap(os.path.join(os.getcwd(), 'UI', 'images', 'speakers.png')))
+                        if '*' + file_ext in VIDEO_FILTER:
+                            item.media_type = 'VIDEO'
+                            item.media_length = self.playlist_get_media_length(file)
+                            item.setIcon(self.playlist_create_thumbnail(file))
 
-                    elif '*' + file_ext in IMAGE_FILTER:
-                        item.media_type = 'IMAGE'
-                        item.setIcon(QPixmap(file))
-                    else:
-                        item.media_type = 'NOT SUPPORTED'
-                        item.media_length = self.playlist_get_media_length(file)
-                        item.setIcon(self.playlist_create_thumbnail(file))
+                        elif '*' + file_ext in AUDIO_FILTER:
+                            item.media_type = 'AUDIO'
+                            item.media_length = self.playlist_get_media_length(file)
+                            item.setIcon(QPixmap(os.path.join(os.getcwd(), 'UI', 'images', 'speakers.png')))
 
-                    item.setText(item.media_file)
-                    item.setFont(QFont("Tahoma", 16))
-                    self.ui.playlist.addItem(item)
+                        elif '*' + file_ext in IMAGE_FILTER:
+                            item.media_type = 'IMAGE'
+                            item.setIcon(QPixmap(file).scaledToHeight(200))
+                        else:
+                            item.media_type = 'NOT SUPPORTED'
+                            try:
+                                item.media_length = self.playlist_get_media_length(file)
+                                item.setIcon(self.playlist_create_thumbnail(file))
+                            except:
+                                file_supported = False
+
+                        if file_supported:
+                            item.setText(item.media_file)
+                            item.setFont(QFont("Tahoma", 12))
+                            self.ui.playlist.addItem(item)
+                        else:
+                            print(f'{file} file not supported!')
+
+        threading.Thread(target=worker()).run()
 
     def playlist_create_thumbnail(self, file):
         cap = cv2.VideoCapture(file)
-        #frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+        # frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
         # frame = random.randrange(20, int(frame_count) - 20)
         cap.set(cv2.CAP_PROP_POS_FRAMES, 50)
         ret, frame = cap.read()
@@ -212,5 +251,3 @@ class AbstractMainWindow(FramelessWindow):
             self.VIDEO_SCREEN.showMaximized()
             if self.ui.chk_play_on_fullscreen.isChecked():
                 self.VIDEO_SCREEN.videoPlayer.play()
-
-

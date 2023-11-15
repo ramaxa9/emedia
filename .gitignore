@@ -4,3 +4,4 @@
 ffprobe.exe
 /venv/
 /output/
+/__pycache__/
