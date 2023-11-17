@@ -1,6 +1,7 @@
 import datetime
 import os
 import sys
+import threading
 
 from PySide6 import QtWidgets
 from PySide6.QtCore import QUrl
@@ -21,6 +22,7 @@ class MainWindow(AbstractMainWindow):
         self.move(int(screen.width() / 2 - window.width() / 2), int(screen.height() / 2 - window.height() / 2))
 
         self.playlist_current_media = None
+        self.item_current_media = None
 
         self.video_screen_move(self.ui.list_screens.currentIndex())
 
@@ -130,7 +132,18 @@ class MainWindow(AbstractMainWindow):
         item.setForeground(QColor.fromString('#000000'))
 
     def media_load(self, item: Item):
+        self.player_stop()
+        if not os.path.exists(item.media_path):
+            print(f'{item.media_path} not exists')
+            return
+        self.item_current_media = item
+        self.playlist_current_media = self.ui.playlist.row(item)
+        self.ui.lbl_current_media.setText(item.media_file)
+        self.VIDEO_SCREEN.videoPlayer.setSource(QUrl())
+
         if item.media_type == "IMAGE":
+            self.player_stop()
+
             self.VIDEO_SCREEN.showFullScreen()
             self.VIDEO_SCREEN.slideInIdx(1)
 
@@ -141,20 +154,19 @@ class MainWindow(AbstractMainWindow):
 
             self.VIDEO_SCREEN.stillViewer.setPixmap(image)
             self.VIDEO_SCREEN.stillViewer.adjustSize()
-            self.player_stop()
         else:
             self.VIDEO_SCREEN.slideInIdx(0)
             self.VIDEO_SCREEN.videoPlayer.setSource(QUrl.fromLocalFile(item.media_path))
 
-        self.playlist_current_media = self.ui.playlist.row(item)
-        self.ui.lbl_current_media.setText(item.media_file)
-
-        if self.ui.chk_doubleclick_play.isChecked() and item.media_type != "IMAGE":
-            self.player_play()
+            if self.ui.chk_doubleclick_play.isChecked() and self.item_current_media.media_type != "IMAGE":
+                self.player_play()
 
     def media_status_handler(self, status: QMediaPlayer.MediaStatus):
         print('Media status', status)
         if status == QMediaPlayer.MediaStatus.NoMedia:
+            pass
+
+        if status == QMediaPlayer.MediaStatus.BufferedMedia:
             pass
 
         if status == QMediaPlayer.MediaStatus.LoadingMedia:
