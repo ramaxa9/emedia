@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1366, 800)
+        MainWindow.resize(1200, 800)
         MainWindow.setMinimumSize(QSize(1200, 800))
         icon = QIcon()
         icon.addFile(u":/images/logo.png", QSize(), QIcon.Normal, QIcon.Off)
@@ -38,8 +38,42 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.w_titlebar = QWidget(MainWindow)
         self.w_titlebar.setObjectName(u"w_titlebar")
-        self.w_titlebar.setMinimumSize(QSize(0, 32))
-        self.w_titlebar.setMaximumSize(QSize(16777215, 32))
+        self.w_titlebar.setMinimumSize(QSize(0, 40))
+        self.w_titlebar.setMaximumSize(QSize(16777215, 40))
+        self.horizontalLayout_6 = QHBoxLayout(self.w_titlebar)
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.horizontalLayout_6.setContentsMargins(6, 0, 6, 0)
+        self.WindowIcon = QLabel(self.w_titlebar)
+        self.WindowIcon.setObjectName(u"WindowIcon")
+        self.WindowIcon.setMinimumSize(QSize(28, 28))
+        self.WindowIcon.setMaximumSize(QSize(28, 28))
+
+        self.horizontalLayout_6.addWidget(self.WindowIcon)
+
+        self.WindowTitle = QLabel(self.w_titlebar)
+        self.WindowTitle.setObjectName(u"WindowTitle")
+        self.WindowTitle.setMinimumSize(QSize(0, 40))
+        self.WindowTitle.setMaximumSize(QSize(16777215, 40))
+
+        self.horizontalLayout_6.addWidget(self.WindowTitle)
+
+        self.btn_maximize = QPushButton(self.w_titlebar)
+        self.btn_maximize.setObjectName(u"btn_maximize")
+        self.btn_maximize.setMinimumSize(QSize(40, 40))
+        self.btn_maximize.setMaximumSize(QSize(40, 40))
+        self.btn_maximize.setFlat(True)
+
+        self.horizontalLayout_6.addWidget(self.btn_maximize)
+
+        self.btn_close = QPushButton(self.w_titlebar)
+        self.btn_close.setObjectName(u"btn_close")
+        self.btn_close.setMinimumSize(QSize(40, 40))
+        self.btn_close.setMaximumSize(QSize(40, 40))
+        self.btn_close.setFlat(True)
+
+        self.horizontalLayout_6.addWidget(self.btn_close)
+
+        self.horizontalLayout_6.setStretch(1, 1)
 
         self.verticalLayout_5.addWidget(self.w_titlebar)
 
@@ -349,6 +383,10 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"EMedia", None))
+        self.WindowIcon.setText(QCoreApplication.translate("MainWindow", u"Icon", None))
+        self.WindowTitle.setText(QCoreApplication.translate("MainWindow", u"Window title", None))
+        self.btn_maximize.setText("")
+        self.btn_close.setText("")
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Player control", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Loop", None))
         self.chk_doubleclick_play.setText(QCoreApplication.translate("MainWindow", u"Doubleclick to play", None))

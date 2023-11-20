@@ -61,7 +61,7 @@ class MainWindow(AbstractMainWindow):
         self.ui.slider_progress.sliderMoved.connect(self.on_slider_position_changed)
 
         # [SIGNALS] Application
-        self.titleBar.closeBtn.clicked.connect(self.close)
+        # self.titleBar.closeBtn.clicked.connect(self.close)
 
     # PLAYER
     def player_toggle_play_pause(self):
@@ -132,7 +132,10 @@ class MainWindow(AbstractMainWindow):
         item.setForeground(QColor.fromString('#000000'))
 
     def media_load(self, item: Item):
-        self.player_stop()
+        if self.VIDEO_SCREEN.videoPlayer.playbackState() == QMediaPlayer.PlaybackState.PlayingState:
+            print('load media: stop')
+            self.player_stop()
+
         if not os.path.exists(item.media_path):
             print(f'{item.media_path} not exists')
             return
@@ -162,7 +165,7 @@ class MainWindow(AbstractMainWindow):
                 self.player_play()
 
     def media_status_handler(self, status: QMediaPlayer.MediaStatus):
-        print('Media status', status)
+        print(status)
         if status == QMediaPlayer.MediaStatus.NoMedia:
             pass
 
@@ -182,7 +185,7 @@ class MainWindow(AbstractMainWindow):
             # TODO: show custom image on playback end
 
     def playback_state_handler(self, status: QMediaPlayer.PlaybackState):
-        print('Playback status', status)
+        print(status)
 
         if status == QMediaPlayer.PlaybackState.PlayingState:
             pass

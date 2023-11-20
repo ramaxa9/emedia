@@ -5,15 +5,12 @@ import threading
 from collections import OrderedDict
 
 import cv2
+import qtawesome as qta
 from PySide6.QtCore import QDir, Qt, QSize
-from PySide6.QtGui import QPixmap, QImage, QPalette, QColor, QIcon, QFont
-from PySide6.QtWidgets import QWidget, QMainWindow, QFileDialog, QApplication, QListView, QListWidget, QListWidgetItem, \
-    QTableWidgetItem, QTreeWidgetItem
+from PySide6.QtGui import QPixmap, QImage, QFont
+from PySide6.QtWidgets import QWidget, QFileDialog, QApplication, QListView, QListWidget, QTreeWidgetItem
 
 from UI.MainWindow import Ui_MainWindow
-from qframelesswindow import FramelessWindow, StandardTitleBar
-import qtawesome as qta
-
 from modules.PlayListItem import Item
 from modules.VideoScreen import VideoWidget
 
@@ -39,16 +36,22 @@ AUDIO_FILTER = [
 ]
 
 
-class AbstractMainWindow(FramelessWindow):
+class AbstractMainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.oldPos = None
 
-        self.setWindowTitle('EMedia')
+        self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
+        self.ui.WindowTitle.setText('EMedia')
+        self.ui.WindowIcon.setPixmap(QPixmap(os.path.join(os.getcwd(), 'UI', 'images', 'logo.png')))
+        self.ui.WindowIcon.setScaledContents(True)
+        self.ui.btn_close.setIcon(qta.icon('mdi6.close', color='white'))
+        self.ui.btn_maximize.setIcon(qta.icon('mdi6.fullscreen', color='white'))
 
-        self.setTitleBar(StandardTitleBar(self))
-        self.titleBar.raise_()
+        # self.setTitleBar(StandardTitleBar(self))
+        # self.titleBar.raise_()
         self.ui.w_titlebar.setStyleSheet('background-color: #444;')
 
         qss = open(os.path.join(os.getcwd(), 'UI', 'Dark.qss')).read()
@@ -251,3 +254,16 @@ class AbstractMainWindow(FramelessWindow):
             self.VIDEO_SCREEN.showMaximized()
             if self.ui.chk_play_on_fullscreen.isChecked():
                 self.VIDEO_SCREEN.videoPlayer.play()
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.oldPos = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        if self.oldPos is not None:
+            delta = event.globalPos() - self.oldPos
+            self.move(self.pos() + delta)
+            self.oldPos = event.globalPos()
+
+    def mouseReleaseEvent(self, event):
+        self.oldPos = None
