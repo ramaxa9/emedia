@@ -415,6 +415,24 @@
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Youtube</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="1">
+            <item>
+             <widget class="QLineEdit" name="link_youtbe">
+              <property name="placeholderText">
+               <string>Paste link here and press enter</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
          </layout>
         </widget>
        </item>

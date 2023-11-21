@@ -4,6 +4,7 @@ from PySide6 import QtCore
 from PySide6.QtGui import QIcon, QPalette, Qt
 from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PySide6.QtMultimediaWidgets import QVideoWidget
+from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import QLabel, QStackedWidget, QSizePolicy
 
 from modules.StackedWidget import SlidingStackedWidget
@@ -16,7 +17,9 @@ class VideoWidget(SlidingStackedWidget):
         self.setWindowIcon(QIcon(os.path.join(os.getcwd(), 'UI', 'images', 'logo.png')))
         self.move(0, 0)
         self.setMinimumSize(800, 600)
+        self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
 
+        self.webView = QWebEngineView()
         self.videoPlayer = QMediaPlayer()
         self.videoWidget = QVideoWidget()
         self.audioOutput = QAudioOutput()
@@ -32,6 +35,7 @@ class VideoWidget(SlidingStackedWidget):
         self.setStyleSheet('background-color:black;')
         self.addWidget(self.videoWidget)
         self.addWidget(self.stillViewer)
+        self.addWidget(self.webView)
 
         self.setCurrentIndex(1)
 

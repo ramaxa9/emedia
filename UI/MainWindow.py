@@ -17,9 +17,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QComboBox,
     QGroupBox, QHBoxLayout, QHeaderView, QLabel,
-    QListWidgetItem, QPushButton, QSizePolicy, QSlider,
-    QSpacerItem, QSpinBox, QTreeWidget, QTreeWidgetItem,
-    QVBoxLayout, QWidget)
+    QLineEdit, QListWidgetItem, QPushButton, QSizePolicy,
+    QSlider, QSpacerItem, QSpinBox, QTreeWidget,
+    QTreeWidgetItem, QVBoxLayout, QWidget)
 
 from modules.Playlist import Playlist
 import resources_rc
@@ -232,6 +232,22 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_6.addLayout(self.horizontalLayout_9)
 
+        self.label_5 = QLabel(self.groupBox_3)
+        self.label_5.setObjectName(u"label_5")
+
+        self.verticalLayout_6.addWidget(self.label_5)
+
+        self.horizontalLayout_12 = QHBoxLayout()
+        self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
+        self.link_youtbe = QLineEdit(self.groupBox_3)
+        self.link_youtbe.setObjectName(u"link_youtbe")
+
+        self.horizontalLayout_12.addWidget(self.link_youtbe)
+
+        self.horizontalLayout_12.setStretch(0, 1)
+
+        self.verticalLayout_6.addLayout(self.horizontalLayout_12)
+
 
         self.verticalLayout_3.addWidget(self.groupBox_3)
 
@@ -401,6 +417,8 @@ class Ui_MainWindow(object):
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Media", None))
         self.btn_playlist_add.setText(QCoreApplication.translate("MainWindow", u"Add", None))
         self.btn_playlist_del.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Youtube", None))
+        self.link_youtbe.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Paste link here and press enter", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"Media info", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Current media", None))
         self.lbl_current_media.setText("")
