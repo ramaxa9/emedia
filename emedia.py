@@ -65,7 +65,14 @@ class MainWindow(AbstractMainWindow):
         self.ui.slider_progress.sliderMoved.connect(self.on_slider_position_changed)
 
         # [SIGNALS] Application
-        # self.titleBar.closeBtn.clicked.connect(self.close)
+        self.ui.btn_close.clicked.connect(self.close)
+        self.ui.btn_maximize.clicked.connect(self.controls_maximize_window)
+
+    def controls_maximize_window(self):
+        if self.isFullScreen():
+            self.showNormal()
+        else:
+            self.showFullScreen()
 
     def add_youtube_video(self):
         # 'https://www.youtube.com/watch?v=_WJq0cfNvtg'
@@ -255,6 +262,9 @@ class MainWindow(AbstractMainWindow):
                 sys.exit()
             else:
                 event.ignore()
+
+    def mouseDoubleClickEvent(self, event):
+        self.controls_maximize_window()
 
 
 if __name__ == '__main__':
