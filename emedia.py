@@ -76,7 +76,7 @@ class MainWindow(AbstractMainWindow):
 
         item = Item()
         item.setText(metadata.title)
-        item.media_path = f'https://www.youtube.com/embed/{yid}?autoplay=1&start=1&rel=0&controls=0'
+        item.media_path = f'https://www.youtube.com/embed/{yid}?autoplay=1&start=1&rel=0s'
         item.media_length = datetime.timedelta(seconds=round(float(metadata.length)))
         item.media_type = 'YOUTUBE'
         item.media_file = metadata.title
