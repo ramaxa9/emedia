@@ -7,7 +7,7 @@ import requests as requests
 from pytube import extract, YouTube
 
 from PySide6 import QtWidgets
-from PySide6.QtCore import QUrl
+from PySide6.QtCore import QUrl, QSize
 from PySide6.QtGui import QIcon, QColor, QPixmap, Qt
 from PySide6.QtMultimedia import QMediaPlayer
 from PySide6.QtWidgets import QApplication, QListWidgetItem
@@ -65,14 +65,6 @@ class MainWindow(AbstractMainWindow):
         self.ui.slider_progress.sliderMoved.connect(self.on_slider_position_changed)
 
         # [SIGNALS] Application
-        self.ui.btn_close.clicked.connect(self.close)
-        self.ui.btn_maximize.clicked.connect(self.controls_maximize_window)
-
-    def controls_maximize_window(self):
-        if self.isFullScreen():
-            self.showNormal()
-        else:
-            self.showFullScreen()
 
     def add_youtube_video(self):
         # 'https://www.youtube.com/watch?v=_WJq0cfNvtg'
@@ -177,6 +169,8 @@ class MainWindow(AbstractMainWindow):
         self.item_current_media = item
         self.playlist_current_media = self.ui.playlist.row(item)
         self.ui.lbl_current_media.setText(item.media_file)
+        item_icon = item.icon()
+        self.ui.lbl_current_media_thumbnail.setPixmap(item_icon.pixmap(QSize(130, 60)))
         self.VIDEO_SCREEN.videoPlayer.setSource(QUrl())
 
         if item.media_type == "IMAGE":
@@ -262,9 +256,6 @@ class MainWindow(AbstractMainWindow):
                 sys.exit()
             else:
                 event.ignore()
-
-    def mouseDoubleClickEvent(self, event):
-        self.controls_maximize_window()
 
 
 if __name__ == '__main__':

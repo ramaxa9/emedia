@@ -43,16 +43,8 @@ class AbstractMainWindow(QWidget):
         self.ui.setupUi(self)
         self.oldPos = None
 
-        self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
-        self.ui.WindowTitle.setText('EMedia')
-        self.ui.WindowIcon.setPixmap(QPixmap(os.path.join(os.getcwd(), 'UI', 'images', 'logo.png')))
-        self.ui.WindowIcon.setScaledContents(True)
-        self.ui.btn_close.setIcon(qta.icon('mdi6.close', color='white'))
-        self.ui.btn_maximize.setIcon(qta.icon('mdi6.fullscreen', color='white'))
-
-        # self.setTitleBar(StandardTitleBar(self))
-        # self.titleBar.raise_()
-        self.ui.w_titlebar.setStyleSheet('background-color: #444;')
+        self.setWindowTitle('EMedia')
+        self.setWindowIcon(QPixmap(os.path.join(os.getcwd(), 'UI', 'images', 'logo.png')))
 
         qss = open(os.path.join(os.getcwd(), 'UI', 'Dark.qss')).read()
         self.setStyleSheet(qss)
@@ -165,17 +157,17 @@ class AbstractMainWindow(QWidget):
 
                         file_supported = True
 
-                        if '*' + file_ext in VIDEO_FILTER:
+                        if '*' + file_ext.lower() in VIDEO_FILTER:
                             item.media_type = 'VIDEO'
                             item.media_length = self.playlist_get_media_length(file)
                             item.setIcon(self.playlist_create_thumbnail(file))
 
-                        elif '*' + file_ext in AUDIO_FILTER:
+                        elif '*' + file_ext.lower() in AUDIO_FILTER:
                             item.media_type = 'AUDIO'
                             item.media_length = self.playlist_get_media_length(file)
                             item.setIcon(QPixmap(os.path.join(os.getcwd(), 'UI', 'images', 'speakers.png')))
 
-                        elif '*' + file_ext in IMAGE_FILTER:
+                        elif '*' + file_ext.lower() in IMAGE_FILTER:
                             item.media_type = 'IMAGE'
                             item.setIcon(QPixmap(file).scaledToHeight(200))
                         else:

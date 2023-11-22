@@ -5,11 +5,12 @@
 - PySide6
 - opencv-python
 - QtAwesome
-- PySideSix-Frameless-Window
+- requests
+- pytube
 
 ### Install requirements:
 ```
-pip install PySide6 opencv-python QtAwesome PySideSix-Frameless-Window
+pip install PySide6 opencv-python QtAwesome requests pytube
 ```
 
 Also you need ffprobe, put it in the program folder

@@ -1132,6 +1132,12 @@ TalkingUI > QFrame {
    font-weight: bold;
  }
 
- #lbl_current_time, #lbl_total_time{
+ #lbl_current_time, #lbl_total_time, #lbl_current_media{
     font-size: 20pt;
+ }
+
+#lbl_current_media{
+    font-family: Tahoma;
+    font-size: 14pt;
+    weight: bold;
  }
