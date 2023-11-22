@@ -4,6 +4,7 @@ from PySide6 import QtCore
 from PySide6.QtGui import QIcon, QPalette, Qt
 from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PySide6.QtMultimediaWidgets import QVideoWidget
+from PySide6.QtWebEngineCore import QWebEngineSettings
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import QLabel, QStackedWidget, QSizePolicy
 
@@ -20,6 +21,8 @@ class VideoWidget(SlidingStackedWidget):
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
 
         self.webView = QWebEngineView()
+        self.webView.settings().setAttribute(QWebEngineSettings.WebAttribute.PluginsEnabled, True)
+        self.webView.settings().setAttribute(QWebEngineSettings.WebAttribute.PdfViewerEnabled, True)
         self.videoPlayer = QMediaPlayer()
         self.videoWidget = QVideoWidget()
         self.audioOutput = QAudioOutput()

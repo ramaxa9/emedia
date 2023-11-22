@@ -35,6 +35,10 @@ AUDIO_FILTER = [
     '*.aac',
 ]
 
+DOCUMENT_FILTER = [
+    '*.pdf',
+]
+
 
 class AbstractMainWindow(QWidget):
     def __init__(self):
@@ -134,9 +138,9 @@ class AbstractMainWindow(QWidget):
     def playlist_item_add(self):
         # TODO: put in thread
 
-        jointypes = ' '.join(VIDEO_FILTER + AUDIO_FILTER + IMAGE_FILTER)
+        jointypes = ' '.join(VIDEO_FILTER + AUDIO_FILTER + IMAGE_FILTER + DOCUMENT_FILTER)
         filetypes = (f"Supported files ({jointypes});;Video files ({' '.join(VIDEO_FILTER)});;"
-                     f"Images({' '.join(IMAGE_FILTER)});;Audio files ({' '.join(AUDIO_FILTER)});;All files(*)")
+                     f"Images({' '.join(IMAGE_FILTER)});;Audio files ({' '.join(AUDIO_FILTER)});;Document files ({' '.join(DOCUMENT_FILTER)});;All files(*)")
 
         file_dialog = QFileDialog(self)
         file_names = file_dialog.getOpenFileNames(self, "Open Media", QDir.homePath(), filetypes)
@@ -170,6 +174,11 @@ class AbstractMainWindow(QWidget):
                         elif '*' + file_ext.lower() in IMAGE_FILTER:
                             item.media_type = 'IMAGE'
                             item.setIcon(QPixmap(file).scaledToHeight(200))
+
+                        elif '*' + file_ext.lower() in DOCUMENT_FILTER:
+                            item.media_type = 'DOCUMENT'
+                            item.setIcon(QPixmap(file).scaledToHeight(200))
+
                         else:
                             item.media_type = 'NOT SUPPORTED'
                             try:

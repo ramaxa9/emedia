@@ -186,13 +186,33 @@ class MainWindow(AbstractMainWindow):
 
             self.VIDEO_SCREEN.stillViewer.setPixmap(image)
             self.VIDEO_SCREEN.stillViewer.adjustSize()
-        elif item.media_type == "YOUTUBE":
+        # elif item.media_type == "DOCUMENT":
+        #     self.player_stop()
+        #     self.VIDEO_SCREEN.showFullScreen()
+        #     self.VIDEO_SCREEN.setCurrentIndex(2)
+        #
+        #     self.VIDEO_SCREEN.webView.setUrl(item.media_path)
+        elif item.media_type == "YOUTUBE" or item.media_type == "DOCUMENT":
             self.player_stop()
             self.VIDEO_SCREEN.showFullScreen()
             self.VIDEO_SCREEN.setCurrentIndex(2)
 
             self.VIDEO_SCREEN.webView.setUrl(item.media_path)
             # self.VIDEO_SCREEN.webView.reload()
+
+        elif item.media_type == "DOCUMENT":
+            self.player_stop()
+            self.VIDEO_SCREEN.showFullScreen()
+            self.VIDEO_SCREEN.setCurrentIndex(2)
+
+            self.VIDEO_SCREEN.webView.setUrl(item.media_path)
+            self.VIDEO_SCREEN.webView.settings().WebAttribute.FullScreenSupportEnabled()
+            self.VIDEO_SCREEN.webView.settings().WebAttribute.AllowWindowActivationFromJavaScript()
+            self.VIDEO_SCREEN.webView.settings().WebAttribute.JavascriptEnabled()
+            self.VIDEO_SCREEN.webView.settings().WebAttribute.JavascriptCanOpenWindows()
+            self.VIDEO_SCREEN.webView.settings().WebAttribute.ReadingFromCanvasEnabled()
+            # self.VIDEO_SCREEN.webView.reload()
+
         else:
             self.VIDEO_SCREEN.setCurrentIndex(0)
             thread = threading.Thread(target=self.VIDEO_SCREEN.videoPlayer.setSource(QUrl.fromLocalFile(item.media_path)))
