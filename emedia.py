@@ -1,9 +1,13 @@
 import datetime
 import os
 import sys
+import threading
+
+import requests as requests
+from pytube import extract, YouTube
 
 from PySide6 import QtWidgets
-from PySide6.QtCore import QUrl
+from PySide6.QtCore import QUrl, QSize
 from PySide6.QtGui import QIcon, QColor, QPixmap, Qt
 from PySide6.QtMultimedia import QMediaPlayer
 from PySide6.QtWidgets import QApplication, QListWidgetItem
@@ -21,6 +25,7 @@ class MainWindow(AbstractMainWindow):
         self.move(int(screen.width() / 2 - window.width() / 2), int(screen.height() / 2 - window.height() / 2))
 
         self.playlist_current_media = None
+        self.item_current_media = None
 
         self.video_screen_move(self.ui.list_screens.currentIndex())
 
@@ -34,6 +39,7 @@ class MainWindow(AbstractMainWindow):
         self.ui.btn_previous.clicked.connect(self.player_previous)
 
         # [SIGNALS] PLAYLIST
+        self.ui.link_youtbe.returnPressed.connect(self.add_youtube_video)
         self.ui.btn_playlist_add.clicked.connect(self.playlist_item_add)
         self.ui.btn_view_mode.clicked.connect(self.playlist_view_mode)
         self.ui.btn_playlist_del.clicked.connect(self.playlist_item_delete)
@@ -59,7 +65,30 @@ class MainWindow(AbstractMainWindow):
         self.ui.slider_progress.sliderMoved.connect(self.on_slider_position_changed)
 
         # [SIGNALS] Application
-        self.titleBar.closeBtn.clicked.connect(self.close)
+
+    def add_youtube_video(self):
+        # 'https://www.youtube.com/watch?v=_WJq0cfNvtg'
+
+        url = str(self.ui.link_youtbe.text())
+        yid = extract.video_id(url)
+        metadata = YouTube(url)
+
+        item = Item()
+        item.setText(metadata.title)
+        item.media_path = f'https://www.youtube.com/embed/{yid}?autoplay=1&start=1&rel=0s'
+        item.media_length = datetime.timedelta(seconds=round(float(metadata.length)))
+        item.media_type = 'YOUTUBE'
+        item.media_file = metadata.title
+        item.setIcon(self.getImageFromURL(metadata.thumbnail_url))
+        self.ui.playlist.addItem(item)
+        self.ui.link_youtbe.clear()
+
+    def getImageFromURL(self, url):
+        request = requests.get(url)
+        thumbnail = QPixmap()
+        thumbnail.loadFromData(request.content)
+        thumbnail.scaledToHeight(150)
+        return thumbnail
 
     # PLAYER
     def player_toggle_play_pause(self):
@@ -130,9 +159,25 @@ class MainWindow(AbstractMainWindow):
         item.setForeground(QColor.fromString('#000000'))
 
     def media_load(self, item: Item):
+        self.VIDEO_SCREEN.webView.reload()
+        if self.VIDEO_SCREEN.videoPlayer.playbackState() == QMediaPlayer.PlaybackState.PlayingState:
+            self.player_stop()
+
+        # if not os.path.exists(item.media_path):
+        #     print(f'{item.media_path} not exists')
+        #     return
+        self.item_current_media = item
+        self.playlist_current_media = self.ui.playlist.row(item)
+        self.ui.lbl_current_media.setText(item.media_file)
+        item_icon = item.icon()
+        self.ui.lbl_current_media_thumbnail.setPixmap(item_icon.pixmap(QSize(130, 60)))
+        self.VIDEO_SCREEN.videoPlayer.setSource(QUrl())
+
         if item.media_type == "IMAGE":
+            self.player_stop()
+
             self.VIDEO_SCREEN.showFullScreen()
-            self.VIDEO_SCREEN.slideInIdx(1)
+            self.VIDEO_SCREEN.setCurrentIndex(1)
 
             image = QPixmap(item.media_path)
             screen = QApplication.screens()[self.ui.list_screens.currentIndex()].geometry()
@@ -141,20 +186,27 @@ class MainWindow(AbstractMainWindow):
 
             self.VIDEO_SCREEN.stillViewer.setPixmap(image)
             self.VIDEO_SCREEN.stillViewer.adjustSize()
+        elif item.media_type == "YOUTUBE":
             self.player_stop()
+            self.VIDEO_SCREEN.showFullScreen()
+            self.VIDEO_SCREEN.setCurrentIndex(2)
+
+            self.VIDEO_SCREEN.webView.setUrl(item.media_path)
+            # self.VIDEO_SCREEN.webView.reload()
         else:
-            self.VIDEO_SCREEN.slideInIdx(0)
-            self.VIDEO_SCREEN.videoPlayer.setSource(QUrl.fromLocalFile(item.media_path))
+            self.VIDEO_SCREEN.setCurrentIndex(0)
+            thread = threading.Thread(target=self.VIDEO_SCREEN.videoPlayer.setSource(QUrl.fromLocalFile(item.media_path)))
+            thread.start()
 
-        self.playlist_current_media = self.ui.playlist.row(item)
-        self.ui.lbl_current_media.setText(item.media_file)
-
-        if self.ui.chk_doubleclick_play.isChecked() and item.media_type != "IMAGE":
-            self.player_play()
+            if self.ui.chk_doubleclick_play.isChecked() and self.item_current_media.media_type != "IMAGE":
+                self.player_play()
 
     def media_status_handler(self, status: QMediaPlayer.MediaStatus):
-        print('Media status', status)
+        print(status)
         if status == QMediaPlayer.MediaStatus.NoMedia:
+            pass
+
+        if status == QMediaPlayer.MediaStatus.BufferedMedia:
             pass
 
         if status == QMediaPlayer.MediaStatus.LoadingMedia:
@@ -170,7 +222,7 @@ class MainWindow(AbstractMainWindow):
             # TODO: show custom image on playback end
 
     def playback_state_handler(self, status: QMediaPlayer.PlaybackState):
-        print('Playback status', status)
+        print(status)
 
         if status == QMediaPlayer.PlaybackState.PlayingState:
             pass
@@ -211,4 +263,5 @@ if __name__ == '__main__':
     videoplayer = MainWindow()
     videoplayer.resize(640, 480)
     videoplayer.show()
+
     sys.exit(app.exec())

@@ -3,5 +3,6 @@
 /.idea/
 ffprobe.exe
 /venv/
+/clean_venv/
 /output/
 /__pycache__/

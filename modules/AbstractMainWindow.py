@@ -5,15 +5,12 @@ import threading
 from collections import OrderedDict
 
 import cv2
+import qtawesome as qta
 from PySide6.QtCore import QDir, Qt, QSize
-from PySide6.QtGui import QPixmap, QImage, QPalette, QColor, QIcon, QFont
-from PySide6.QtWidgets import QWidget, QMainWindow, QFileDialog, QApplication, QListView, QListWidget, QListWidgetItem, \
-    QTableWidgetItem, QTreeWidgetItem
+from PySide6.QtGui import QPixmap, QImage, QFont
+from PySide6.QtWidgets import QWidget, QFileDialog, QApplication, QListView, QListWidget, QTreeWidgetItem
 
 from UI.MainWindow import Ui_MainWindow
-from qframelesswindow import FramelessWindow, StandardTitleBar
-import qtawesome as qta
-
 from modules.PlayListItem import Item
 from modules.VideoScreen import VideoWidget
 
@@ -39,17 +36,15 @@ AUDIO_FILTER = [
 ]
 
 
-class AbstractMainWindow(FramelessWindow):
+class AbstractMainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.oldPos = None
 
         self.setWindowTitle('EMedia')
-
-        self.setTitleBar(StandardTitleBar(self))
-        self.titleBar.raise_()
-        self.ui.w_titlebar.setStyleSheet('background-color: #444;')
+        self.setWindowIcon(QPixmap(os.path.join(os.getcwd(), 'UI', 'images', 'logo.png')))
 
         qss = open(os.path.join(os.getcwd(), 'UI', 'Dark.qss')).read()
         self.setStyleSheet(qss)
@@ -162,17 +157,17 @@ class AbstractMainWindow(FramelessWindow):
 
                         file_supported = True
 
-                        if '*' + file_ext in VIDEO_FILTER:
+                        if '*' + file_ext.lower() in VIDEO_FILTER:
                             item.media_type = 'VIDEO'
                             item.media_length = self.playlist_get_media_length(file)
                             item.setIcon(self.playlist_create_thumbnail(file))
 
-                        elif '*' + file_ext in AUDIO_FILTER:
+                        elif '*' + file_ext.lower() in AUDIO_FILTER:
                             item.media_type = 'AUDIO'
                             item.media_length = self.playlist_get_media_length(file)
                             item.setIcon(QPixmap(os.path.join(os.getcwd(), 'UI', 'images', 'speakers.png')))
 
-                        elif '*' + file_ext in IMAGE_FILTER:
+                        elif '*' + file_ext.lower() in IMAGE_FILTER:
                             item.media_type = 'IMAGE'
                             item.setIcon(QPixmap(file).scaledToHeight(200))
                         else:
@@ -251,3 +246,16 @@ class AbstractMainWindow(FramelessWindow):
             self.VIDEO_SCREEN.showMaximized()
             if self.ui.chk_play_on_fullscreen.isChecked():
                 self.VIDEO_SCREEN.videoPlayer.play()
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.oldPos = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        if self.oldPos is not None:
+            delta = event.globalPos() - self.oldPos
+            self.move(self.pos() + delta)
+            self.oldPos = event.globalPos()
+
+    def mouseReleaseEvent(self, event):
+        self.oldPos = None
