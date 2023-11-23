@@ -1,7 +1,8 @@
 # EMedia
 - Is a simple media player with separated controls and video screen. Can play/show video, audio and image files
-- Testing: Added webview to play YouTube videos
-- Testing: Display PDF
+
+- - Testing: Added webview to play YouTube videos
+- - Testing: Display PDF
 
 ### Rquirements:
 - PySide6
