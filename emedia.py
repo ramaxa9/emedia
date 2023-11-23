@@ -12,14 +12,14 @@ from PySide6.QtGui import QIcon, QColor, QPixmap, Qt
 from PySide6.QtMultimedia import QMediaPlayer
 from PySide6.QtWidgets import QApplication, QListWidgetItem
 
-from modules.AbstractMainWindow import AbstractMainWindow
+from modules.MainWindow import AbstractMainWindow
 from modules.PlayListItem import Item
 
 
 class MainWindow(AbstractMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowIcon(QIcon(os.path.join(os.getcwd(), 'UI', 'images', 'logo.png')))
+        self.setWindowIcon(QIcon(os.path.join(os.getcwd(), 'images', 'logo.png')))
         screen = QApplication.screens()[0].geometry()
         window = self.geometry()
         self.move(int(screen.width() / 2 - window.width() / 2), int(screen.height() / 2 - window.height() / 2))
@@ -265,7 +265,6 @@ class MainWindow(AbstractMainWindow):
 
     def closeEvent(self, event):
         # IDEA: save playlist on exit
-        # FIXME: close dialog appears twice if press NO
         if event:
             reply = QtWidgets.QMessageBox.question(
                 self, 'QUIT',

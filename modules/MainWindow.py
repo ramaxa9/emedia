@@ -10,7 +10,7 @@ from PySide6.QtCore import QDir, Qt, QSize
 from PySide6.QtGui import QPixmap, QImage, QFont
 from PySide6.QtWidgets import QWidget, QFileDialog, QApplication, QListView, QListWidget, QTreeWidgetItem
 
-from UI.MainWindow import Ui_MainWindow
+from modules.UI_MainWindow import Ui_MainWindow
 from modules.PlayListItem import Item
 from modules.VideoScreen import VideoWidget
 
@@ -48,9 +48,9 @@ class AbstractMainWindow(QWidget):
         self.oldPos = None
 
         self.setWindowTitle('EMedia')
-        self.setWindowIcon(QPixmap(os.path.join(os.getcwd(), 'UI', 'images', 'logo.png')))
+        self.setWindowIcon(QPixmap(os.path.join(os.getcwd(), 'images', 'logo.png')))
 
-        qss = open(os.path.join(os.getcwd(), 'UI', 'Dark.qss')).read()
+        qss = open('Dark.qss').read()
         self.setStyleSheet(qss)
 
         # Controls
@@ -169,7 +169,7 @@ class AbstractMainWindow(QWidget):
                         elif '*' + file_ext.lower() in AUDIO_FILTER:
                             item.media_type = 'AUDIO'
                             item.media_length = self.playlist_get_media_length(file)
-                            item.setIcon(QPixmap(os.path.join(os.getcwd(), 'UI', 'images', 'speakers.png')))
+                            item.setIcon(QPixmap(os.path.join(os.getcwd(), 'images', 'speakers.png')))
 
                         elif '*' + file_ext.lower() in IMAGE_FILTER:
                             item.media_type = 'IMAGE'

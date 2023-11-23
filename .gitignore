@@ -6,3 +6,6 @@ ffprobe.exe
 /clean_venv/
 /output/
 /__pycache__/
+/dist/
+/build/
+/EMedia.spec

@@ -15,7 +15,7 @@ class VideoWidget(SlidingStackedWidget):
     def __init__(self, mediafile: str = None):
         super(VideoWidget, self).__init__()
         self.setWindowTitle("EMedia Player")
-        self.setWindowIcon(QIcon(os.path.join(os.getcwd(), 'UI', 'images', 'logo.png')))
+        self.setWindowIcon(QIcon(os.path.join(os.getcwd(), 'images', 'logo.png')))
         self.move(0, 0)
         self.setMinimumSize(800, 600)
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
@@ -23,6 +23,7 @@ class VideoWidget(SlidingStackedWidget):
         self.webView = QWebEngineView()
         self.webView.settings().setAttribute(QWebEngineSettings.WebAttribute.PluginsEnabled, True)
         self.webView.settings().setAttribute(QWebEngineSettings.WebAttribute.PdfViewerEnabled, True)
+        self.webView.settings().setAttribute(QWebEngineSettings.WebAttribute.FullScreenSupportEnabled, True)
         self.videoPlayer = QMediaPlayer()
         self.videoWidget = QVideoWidget()
         self.audioOutput = QAudioOutput()
