@@ -47,6 +47,56 @@ class Ui_MainWindow(object):
         self.groupBox_5.setMaximumSize(QSize(400, 16777215))
         self.verticalLayout_9 = QVBoxLayout(self.groupBox_5)
         self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.horizontalLayout_11 = QHBoxLayout()
+        self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
+        self.horizontalLayout_11.setContentsMargins(0, 0, 0, 0)
+        self.label_3 = QLabel(self.groupBox_5)
+        self.label_3.setObjectName(u"label_3")
+
+        self.horizontalLayout_11.addWidget(self.label_3)
+
+        self.lbl_volume = QLabel(self.groupBox_5)
+        self.lbl_volume.setObjectName(u"lbl_volume")
+        self.lbl_volume.setMinimumSize(QSize(40, 0))
+        self.lbl_volume.setMaximumSize(QSize(40, 16777215))
+
+        self.horizontalLayout_11.addWidget(self.lbl_volume)
+
+        self.horizontalLayout_11.setStretch(0, 1)
+
+        self.verticalLayout_9.addLayout(self.horizontalLayout_11)
+
+        self.horizontalLayout_13 = QHBoxLayout()
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
+        self.btn_fadeout = QPushButton(self.groupBox_5)
+        self.btn_fadeout.setObjectName(u"btn_fadeout")
+
+        self.horizontalLayout_13.addWidget(self.btn_fadeout)
+
+        self.slider_volume = QSlider(self.groupBox_5)
+        self.slider_volume.setObjectName(u"slider_volume")
+        self.slider_volume.setMaximum(100)
+        self.slider_volume.setPageStep(5)
+        self.slider_volume.setSliderPosition(100)
+        self.slider_volume.setOrientation(Qt.Horizontal)
+        self.slider_volume.setTickPosition(QSlider.TicksAbove)
+        self.slider_volume.setTickInterval(5)
+
+        self.horizontalLayout_13.addWidget(self.slider_volume)
+
+        self.btn_fadein = QPushButton(self.groupBox_5)
+        self.btn_fadein.setObjectName(u"btn_fadein")
+
+        self.horizontalLayout_13.addWidget(self.btn_fadein)
+
+
+        self.verticalLayout_9.addLayout(self.horizontalLayout_13)
+
+        self.chk_fadeout_pause = QCheckBox(self.groupBox_5)
+        self.chk_fadeout_pause.setObjectName(u"chk_fadeout_pause")
+
+        self.verticalLayout_9.addWidget(self.chk_fadeout_pause)
+
         self.horizontalLayout_7 = QHBoxLayout()
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
         self.lbl_current_media_thumbnail = QLabel(self.groupBox_5)
@@ -371,6 +421,11 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"EMedia", None))
         self.groupBox_5.setTitle(QCoreApplication.translate("MainWindow", u"Playback", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Volume", None))
+        self.lbl_volume.setText("")
+        self.btn_fadeout.setText(QCoreApplication.translate("MainWindow", u"Fade", None))
+        self.btn_fadein.setText(QCoreApplication.translate("MainWindow", u"Fade", None))
+        self.chk_fadeout_pause.setText(QCoreApplication.translate("MainWindow", u"Pause on FadeOut", None))
         self.lbl_current_media_thumbnail.setText("")
         self.lbl_current_media.setText("")
         self.lbl_current_time.setText(QCoreApplication.translate("MainWindow", u"00:00:00", None))

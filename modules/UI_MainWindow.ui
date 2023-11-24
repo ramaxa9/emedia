@@ -20,7 +20,7 @@
    <string>EMedia</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources.qrc">
+   <iconset>
     <normaloff>:/images/logo.png</normaloff>:/images/logo.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -69,7 +69,96 @@
          <property name="title">
           <string>Playback</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_9" stretch="0,0,0,0,0">
+         <layout class="QVBoxLayout" name="verticalLayout_9" stretch="0,0,0,0,0,0,0,0">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="1,0">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Volume</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lbl_volume">
+              <property name="minimumSize">
+               <size>
+                <width>40</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>40</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_13">
+            <item>
+             <widget class="QPushButton" name="btn_fadeout">
+              <property name="text">
+               <string>Fade</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="slider_volume">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="pageStep">
+               <number>5</number>
+              </property>
+              <property name="sliderPosition">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksAbove</enum>
+              </property>
+              <property name="tickInterval">
+               <number>5</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_fadein">
+              <property name="text">
+               <string>Fade</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chk_fadeout_pause">
+            <property name="text">
+             <string>Pause on FadeOut</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_7">
             <item>
@@ -154,7 +243,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/icons/play-circle.svg</normaloff>:/icons/play-circle.svg</iconset>
               </property>
               <property name="iconSize">
@@ -177,7 +266,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/icons/play-circle.svg</normaloff>:/icons/play-circle.svg</iconset>
               </property>
               <property name="iconSize">
@@ -200,7 +289,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/icons/pause-circle.svg</normaloff>:/icons/pause-circle.svg</iconset>
               </property>
               <property name="iconSize">
@@ -223,7 +312,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/icons/stop-circle.svg</normaloff>:/icons/stop-circle.svg</iconset>
               </property>
               <property name="iconSize">
@@ -246,7 +335,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/icons/play-circle.svg</normaloff>:/icons/play-circle.svg</iconset>
               </property>
               <property name="iconSize">
@@ -484,7 +573,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="resources.qrc">
+                <iconset>
                  <normaloff>:/icons/refresh-ccw.svg</normaloff>:/icons/refresh-ccw.svg</iconset>
                </property>
                <property name="iconSize">
@@ -508,7 +597,7 @@
                 <string>Fullscreen</string>
                </property>
                <property name="icon">
-                <iconset resource="resources.qrc">
+                <iconset>
                  <normaloff>:/icons/move.svg</normaloff>:/icons/move.svg</iconset>
                </property>
                <property name="iconSize">

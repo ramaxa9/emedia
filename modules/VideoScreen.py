@@ -1,6 +1,7 @@
 import os
 
 from PySide6 import QtCore
+from PySide6.QtCore import QPropertyAnimation, QEasingCurve
 from PySide6.QtGui import QIcon, QPalette, Qt
 from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PySide6.QtMultimediaWidgets import QVideoWidget
@@ -28,6 +29,7 @@ class VideoWidget(SlidingStackedWidget):
         self.videoWidget = QVideoWidget()
         self.audioOutput = QAudioOutput()
         self.audioOutput.setVolume(1.0)
+        self.current_volume = self.audioOutput.volume()
         self.videoPlayer.setAudioOutput(self.audioOutput)
         self.videoPlayer.setVideoOutput(self.videoWidget)
 
@@ -44,6 +46,22 @@ class VideoWidget(SlidingStackedWidget):
         self.setCurrentIndex(1)
 
         self.offset = None
+
+        # EFFECTS
+        # # Fade
+        self.fade_out_anim = QPropertyAnimation(self.audioOutput, b"volume")
+        self.fade_out_anim.setDuration(600)
+        self.fade_out_anim.setStartValue(self.current_volume)
+        self.fade_out_anim.setEndValue(0)
+        self.fade_out_anim.setEasingCurve(QEasingCurve.Type.Linear)
+        self.fade_out_anim.setKeyValueAt(0.01, self.current_volume)
+
+        self.fade_in_anim = QPropertyAnimation(self.audioOutput, b"volume")
+        self.fade_in_anim.setDuration(600)
+        self.fade_in_anim.setStartValue(0.01)
+        self.fade_in_anim.setEndValue(self.current_volume)
+        self.fade_in_anim.setEasingCurve(QEasingCurve.Type.Linear)
+        self.fade_in_anim.setKeyValueAt(0.01, 0.01)
 
     def mousePressEvent(self, event):
         if event.button() == QtCore.Qt.MouseButton.RightButton:

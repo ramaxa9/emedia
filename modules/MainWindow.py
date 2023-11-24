@@ -54,6 +54,9 @@ class AbstractMainWindow(QWidget):
         self.setStyleSheet(qss)
 
         # Controls
+        self.ui.btn_fadeout.setIcon(qta.icon('fa5s.volume-off', color='white'))
+        self.ui.btn_fadein.setIcon(qta.icon('fa5s.volume-up', color='white'))
+
         self.ui.btn_play.setIcon(qta.icon('mdi6.play', color='white'))
         self.ui.btn_pause.setIcon(qta.icon('mdi6.pause', color='white'))
         self.ui.btn_stop.setIcon(qta.icon('mdi6.stop', color='white'))

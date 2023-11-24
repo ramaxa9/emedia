@@ -7,7 +7,7 @@ import requests as requests
 from pytube import extract, YouTube
 
 from PySide6 import QtWidgets
-from PySide6.QtCore import QUrl, QSize
+from PySide6.QtCore import QUrl, QSize, QPropertyAnimation, QEasingCurve
 from PySide6.QtGui import QIcon, QColor, QPixmap, Qt
 from PySide6.QtMultimedia import QMediaPlayer
 from PySide6.QtWidgets import QApplication, QListWidgetItem
@@ -37,6 +37,10 @@ class MainWindow(AbstractMainWindow):
         self.ui.btn_stop.clicked.connect(self.player_stop)
         self.ui.btn_next.clicked.connect(self.player_next)
         self.ui.btn_previous.clicked.connect(self.player_previous)
+        self.ui.btn_fadeout.clicked.connect(self.volume_fadeout)
+        self.ui.btn_fadein.clicked.connect(self.volume_fadein)
+
+        self.VIDEO_SCREEN.fade_out_anim.finished.connect(self.volume_fadeout_pause)
 
         # [SIGNALS] PLAYLIST
         self.ui.link_youtbe.returnPressed.connect(self.add_youtube_video)
@@ -63,6 +67,10 @@ class MainWindow(AbstractMainWindow):
         self.VIDEO_SCREEN.videoPlayer.durationChanged.connect(self.media_slider_set_range)
 
         self.ui.slider_progress.sliderMoved.connect(self.on_slider_position_changed)
+        self.ui.slider_volume.sliderMoved.connect(self.change_volume_output)
+
+        self.VIDEO_SCREEN.fade_out_anim.valueChanged.connect(self.change_volume_slider)
+        self.VIDEO_SCREEN.fade_in_anim.valueChanged.connect(self.change_volume_slider)
 
         # [SIGNALS] Application
 
@@ -91,6 +99,34 @@ class MainWindow(AbstractMainWindow):
         return thumbnail
 
     # PLAYER
+    def change_volume_output(self, value):
+        self.ui.lbl_volume.setText(f'{value}%')
+        value = value / 100
+        self.VIDEO_SCREEN.audioOutput.setVolume(float(value / 100))
+
+    def change_volume_slider(self, value):
+        value = round(value * 100)
+        self.ui.slider_volume.setValue(value)
+        self.ui.lbl_volume.setText(f'{value}%')
+        if int(value) == 0:
+            self.ui.btn_fadeout.setDisabled(True)
+            self.ui.btn_fadein.setEnabled(True)
+        elif int(value) > 0:
+            self.ui.btn_fadeout.setDisabled(False)
+            self.ui.btn_fadein.setEnabled(False)
+
+    def volume_fadeout(self):
+        self.VIDEO_SCREEN.fade_out_anim.setStartValue(self.VIDEO_SCREEN.current_volume)
+        self.VIDEO_SCREEN.fade_out_anim.start()
+
+    def volume_fadeout_pause(self):
+        if self.ui.chk_fadeout_pause.isChecked():
+            self.player_pause()
+
+    def volume_fadein(self):
+        self.VIDEO_SCREEN.fade_in_anim.setStartValue(self.VIDEO_SCREEN.current_volume)
+        self.VIDEO_SCREEN.fade_in_anim.start()
+
     def player_toggle_play_pause(self):
         if self.VIDEO_SCREEN.videoPlayer.playbackState() == QMediaPlayer.PlaybackState.PlayingState:
             self.VIDEO_SCREEN.videoPlayer.pause()
@@ -159,6 +195,11 @@ class MainWindow(AbstractMainWindow):
         item.setForeground(QColor.fromString('#000000'))
 
     def media_load(self, item: Item):
+        # print(f'{self.VIDEO_SCREEN.videoPlayer.source().path().lower()[1:]} {item.media_path.lower()}')
+        if self.VIDEO_SCREEN.videoPlayer.source().path().lower()[1:] == item.media_path.lower():
+            self.player_play()
+            return
+
         self.VIDEO_SCREEN.webView.reload()
         if self.VIDEO_SCREEN.videoPlayer.playbackState() == QMediaPlayer.PlaybackState.PlayingState:
             self.player_stop()
