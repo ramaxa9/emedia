@@ -31,6 +31,8 @@ class MainWindow(AbstractMainWindow):
 
         self.ui.slider_progress.setRange(0, 0)
 
+        self.disable_fade_buttons(100)
+
         # [SIGNALS] Player
         self.ui.btn_play.clicked.connect(self.player_play)
         self.ui.btn_pause.clicked.connect(self.player_pause)
@@ -67,7 +69,9 @@ class MainWindow(AbstractMainWindow):
         self.VIDEO_SCREEN.videoPlayer.durationChanged.connect(self.media_slider_set_range)
 
         self.ui.slider_progress.sliderMoved.connect(self.on_slider_position_changed)
+
         self.ui.slider_volume.sliderMoved.connect(self.change_volume_output)
+        self.ui.slider_volume.valueChanged.connect(self.disable_fade_buttons)
 
         self.VIDEO_SCREEN.fade_out_anim.valueChanged.connect(self.change_volume_slider)
         self.VIDEO_SCREEN.fade_in_anim.valueChanged.connect(self.change_volume_slider)
@@ -99,15 +103,7 @@ class MainWindow(AbstractMainWindow):
         return thumbnail
 
     # PLAYER
-    def change_volume_output(self, value):
-        self.ui.lbl_volume.setText(f'{value}%')
-        value = value / 100
-        self.VIDEO_SCREEN.audioOutput.setVolume(float(value / 100))
-
-    def change_volume_slider(self, value):
-        value = round(value * 100)
-        self.ui.slider_volume.setValue(value)
-        self.ui.lbl_volume.setText(f'{value}%')
+    def disable_fade_buttons(self, value):
         if int(value) == 0:
             self.ui.btn_fadeout.setDisabled(True)
             self.ui.btn_fadein.setEnabled(True)
@@ -115,8 +111,20 @@ class MainWindow(AbstractMainWindow):
             self.ui.btn_fadeout.setDisabled(False)
             self.ui.btn_fadein.setEnabled(False)
 
+    def change_volume_output(self, value):
+        self.ui.lbl_volume.setText(f'{value}%')
+        value = value / 100
+        print(f'change_volume_output: {value}')
+        self.VIDEO_SCREEN.audioOutput.setVolume(value)
+
+    def change_volume_slider(self, value):
+        value = round(value * 100)
+        self.ui.lbl_volume.setText(f'{value}%')
+        print(f'change_volume_slider: {value}')
+        self.ui.slider_volume.setSliderPosition(value)
+
     def volume_fadeout(self):
-        self.VIDEO_SCREEN.fade_out_anim.setStartValue(self.VIDEO_SCREEN.current_volume)
+        self.VIDEO_SCREEN.fade_out_anim.setStartValue(self.VIDEO_SCREEN.audioOutput.volume())
         self.VIDEO_SCREEN.fade_out_anim.start()
 
     def volume_fadeout_pause(self):
@@ -124,7 +132,7 @@ class MainWindow(AbstractMainWindow):
             self.player_pause()
 
     def volume_fadein(self):
-        self.VIDEO_SCREEN.fade_in_anim.setStartValue(self.VIDEO_SCREEN.current_volume)
+        self.VIDEO_SCREEN.fade_in_anim.setStartValue(self.VIDEO_SCREEN.audioOutput.volume())
         self.VIDEO_SCREEN.fade_in_anim.start()
 
     def player_toggle_play_pause(self):

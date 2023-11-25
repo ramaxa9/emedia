@@ -51,15 +51,15 @@ class VideoWidget(SlidingStackedWidget):
         # # Fade
         self.fade_out_anim = QPropertyAnimation(self.audioOutput, b"volume")
         self.fade_out_anim.setDuration(600)
-        self.fade_out_anim.setStartValue(self.current_volume)
+        self.fade_out_anim.setStartValue(self.audioOutput.volume())
         self.fade_out_anim.setEndValue(0)
         self.fade_out_anim.setEasingCurve(QEasingCurve.Type.Linear)
-        self.fade_out_anim.setKeyValueAt(0.01, self.current_volume)
+        self.fade_out_anim.setKeyValueAt(0.01, self.audioOutput.volume())
 
         self.fade_in_anim = QPropertyAnimation(self.audioOutput, b"volume")
         self.fade_in_anim.setDuration(600)
-        self.fade_in_anim.setStartValue(0.01)
-        self.fade_in_anim.setEndValue(self.current_volume)
+        self.fade_in_anim.setStartValue(self.audioOutput.volume())
+        self.fade_in_anim.setEndValue(1.0)
         self.fade_in_anim.setEasingCurve(QEasingCurve.Type.Linear)
         self.fade_in_anim.setKeyValueAt(0.01, 0.01)
 
